@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getBlogPost } from '@/lib/db-storage';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
+export default async function BlogPost({ params }: { params: any }) {
   const slug = params.slug;
   // Get the blog post from the database
   const post = await getBlogPost(slug);

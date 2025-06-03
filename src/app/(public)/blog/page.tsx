@@ -1,5 +1,4 @@
 import { getBlogPosts } from '@/lib/db-storage';
-import Image from "next/image";
 import Link from "next/link";
 
 export default async function Blog() {

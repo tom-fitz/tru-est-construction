@@ -1,11 +1,10 @@
 import { Metadata } from 'next';
-import { storageService } from '@/lib/storage';
+import { getBlogPost, BlogPost } from '@/lib/db-storage';
 
 // Define a reusable function to generate metadata for a blog post
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  // This will only work during build time or server-side
-  // For production, you would want to use a proper database
-  const post = storageService.getBlogPost(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  // Use the async database function
+  const post: BlogPost | undefined = await getBlogPost(params.slug);
   
   if (!post || !post.published) {
     return {

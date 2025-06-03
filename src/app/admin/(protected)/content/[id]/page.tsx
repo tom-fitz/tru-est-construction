@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { PageContent } from '@/lib/db-storage';
 import Link from 'next/link';
 
-export default function ContentEditor({ params }: { params: { id: string } }) {
-  const router = useRouter();
+export default function ContentEditor({ params }: { params: any }) {
   const [page, setPage] = useState<PageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { BlogPost } from '@/lib/db-storage';
 import Link from 'next/link';
 
-export default function BlogEditor({ params }: { params: { id: string } }) {
+export default function BlogEditor({ params }: { params: any }) {
   const router = useRouter();
   const isNewPost = params.id === 'new';
   const postId = isNewPost ? null : parseInt(params.id, 10);

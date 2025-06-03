@@ -1,5 +1,4 @@
 import { getPageContent } from '@/lib/db-storage';
-import Image from "next/image";
 
 export default async function About() {
   // Get the about page content from the database

@@ -1,13 +1,35 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navigation() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-sm py-4">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center">
-          <div className="text-xl font-bold">
-            <Link href="/" className="text-gray-800 dark:text-white">
-              <img src="/tru_est_cont_logo.png" alt="Tru-Est Construction" className="h-26" />
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link href="/" className="flex-shrink-0 flex items-center">
+              <Image
+                src="/logo.png"
+                alt="Tru-Est Construction"
+                width={150}
+                height={40}
+                className="h-8 w-auto"
+                priority
+              />
             </Link>
           </div>
           <div className="flex space-x-8">

@@ -1,5 +1,4 @@
 import { getPageContent } from '@/lib/db-storage';
-import Image from "next/image";
 
 export default async function Contact() {
   // Get the contact page content from the database
