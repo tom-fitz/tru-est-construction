@@ -17,7 +17,7 @@ export default async function BlogPost({ params }: { params: any }) {
   return (
     <div className="flex flex-col">
       {/* Page Header */}
-      <section className="bg-gray-100 dark:bg-gray-800 py-12">
+      {/* <section className="bg-gray-100 dark:bg-gray-800 py-12">
         <div className="container mx-auto px-4">
           <p className="text-center mb-2">
             <Link href="/blog" className="text-yellow-600 dark:text-yellow-400 hover:underline">
@@ -26,6 +26,24 @@ export default async function BlogPost({ params }: { params: any }) {
           </p>
           <h1 className="text-4xl font-bold text-center text-gray-900 dark:text-white">{post.title}</h1>
           <p className="mt-4 text-center text-yellow-600 dark:text-yellow-400">{post.date}</p>
+        </div>
+      </section> */}
+
+      <section className="relative h-[300px] w-full">
+        <div className="absolute inset-0 bg-gray-900/70 z-10" />
+        <div className="relative h-full w-full">
+          <div className="absolute inset-0 bg-gray-500" />
+          <div className="container mx-auto px-4 h-full flex items-center justify-center relative z-20">
+            <div className="text-center text-white">
+            <p className="text-center mb-2">
+              <Link href="/blog" className="text-yellow-600 dark:text-yellow-400 hover:underline">
+                ← Back to Blog
+              </Link>
+            </p>
+              <h1 className="text-4xl font-bold text-center text-gray-900 dark:text-white">{post.title}</h1>
+              <p className="mt-4 text-center text-yellow-600 dark:text-yellow-400">{post.date}</p>
+            </div>
+          </div>
         </div>
       </section>
 

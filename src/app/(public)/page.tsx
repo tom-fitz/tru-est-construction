@@ -1,102 +1,173 @@
-import { getPageContent } from '@/lib/db-storage';
+import { getPageContent, getBlogPosts } from '@/lib/db-storage';
 import Link from "next/link";
+import Image from "next/image";
+
+interface HomePageContent {
+  heroTitle: string;
+  heroDescription: string;
+  storyTitle: string;
+  storyContent: string;
+}
 
 export default async function Home() {
-  // Get the home page content from the database
-  const page = await getPageContent('home');
-  const homeContent = page?.content || '';
+  // Get the home page content and recent blog posts from the database
+  const [page, posts] = await Promise.all([
+    getPageContent('home'),
+    getBlogPosts()
+  ]);
+  
+  // Parse the homepage content
+  let homeContent: HomePageContent;
+  try {
+    homeContent = JSON.parse(page?.content || '{}') as HomePageContent;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    // Fallback to old format
+    homeContent = {
+      heroTitle: 'Construction Management',
+      heroDescription: 'With over 45 years in General Contracting experience, we work exclusively for you, looking out for your best interest.',
+      storyTitle: 'Building Excellence Since 1978',
+      storyContent: page?.content || '',
+    };
+  }
+  
+  const recentPosts = posts.slice(0, 3); // Get only the 3 most recent posts
   
   return (
     <div className="flex flex-col">
       {/* Hero Section with Header Image */}
-      <section className="relative h-[500px] w-full">
-        <div className="absolute inset-0 bg-gray-900/70 z-10" />
-        <div className="relative h-full w-full">
-          {/* Placeholder for header image - replace with your actual image */}
-          <div className="absolute inset-0 bg-gray-500" />
-          <div className="container mx-auto px-4 h-full flex items-center justify-center relative z-20">
-            <div className="text-center text-white">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Quality Construction Services</h1>
-              <p className="text-xl mb-8 max-w-2xl mx-auto">Building your dreams with precision and reliability</p>
-              <Link 
-                href="/contact" 
-                className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-8 rounded-md transition-colors"
-              >
-                Get a Free Quote
-              </Link>
+      <section className="relative min-h-[85vh] w-full flex items-center overflow-hidden bg-white">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 -m-[5%]">
+          <Image
+            src="/hero_two.webp"
+            alt="Construction and Engineering"
+            fill
+            className="object-cover object-center"
+            priority
+            quality={100}
+          />
+        </div>
+
+        {/* Darker Overlay for Better Contrast */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Content Container */}
+        <div className="relative w-full">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+                {homeContent.heroTitle}
+              </h1>
+              <p className="text-lg md:text-xl text-white mb-8 max-w-xl drop-shadow-md">
+                {homeContent.heroDescription}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link 
+                  href="/contact" 
+                  className="inline-flex items-center px-8 py-4 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-400 transition-colors shadow-lg"
+                >
+                  Start Your Project
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+                <Link 
+                  href="/about" 
+                  className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg bg-white/10 hover:bg-white/20 transition-colors border border-white/40 shadow-lg"
+                >
+                  Learn More About Us
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-24 bg-gray-100 relative">
+        {/* Decorative top border */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400"></div>
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">About Tru-Est Construction</h2>
-            <div className="prose dark:prose-invert mx-auto">
-              {/* Render the content from storage */}
-              <div dangerouslySetInnerHTML={{ __html: homeContent }} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/callout_01.jpg"
+                alt="Tru-Est Construction Team"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
-            <Link 
-              href="/about" 
-              className="inline-block mt-6 text-yellow-600 hover:text-yellow-700 dark:text-yellow-500 dark:hover:text-yellow-400 font-medium"
-            >
-              Learn more about us →
-            </Link>
+            <div>
+              <span className="text-yellow-600 font-semibold tracking-wider uppercase text-sm mb-4 block">Our Story</span>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">{homeContent.storyTitle}</h2>
+              <div className="prose prose-lg text-gray-800 mb-8">
+                <div dangerouslySetInnerHTML={{ __html: homeContent.storyContent || '' }} />
+              </div>
+              <Link 
+                href="/about" 
+                className="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Learn More About Us
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="py-16 bg-gray-100 dark:bg-gray-900">
+      {/* Recent Blog Posts Section */}
+      <section className="py-24 bg-gray-800 relative">
+        {/* Decorative top border */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400"></div>
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-white">Contact Us</h2>
-            <form className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8">
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-gray-700 dark:text-gray-300 mb-2">Name</label>
-                <input 
-                  type="text" 
-                  id="name" 
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                  placeholder="Your name"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                  placeholder="Your email"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="phone" className="block text-gray-700 dark:text-gray-300 mb-2">Phone</label>
-                <input 
-                  type="tel" 
-                  id="phone" 
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                  placeholder="Your phone number"
-                />
-              </div>
-              <div className="mb-6">
-                <label htmlFor="message" className="block text-gray-700 dark:text-gray-300 mb-2">Message</label>
-                <textarea 
-                  id="message" 
-                  rows={4} 
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                  placeholder="How can we help you?"
-                ></textarea>
-              </div>
-              <button 
-                type="submit" 
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-4 rounded-md transition-colors"
-              >
-                Send Message
-              </button>
-            </form>
+          <div className="text-center mb-16">
+            <span className="text-yellow-400 font-semibold tracking-wider uppercase text-sm mb-4 block">Latest Updates</span>
+            <h2 className="text-4xl font-bold text-white mb-6">Recent Blog Posts</h2>
+            <div className="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Stay updated with the latest news, tips, and insights from the construction industry
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {recentPosts.map((post) => (
+              <article key={post.id} className="bg-white rounded-xl shadow-xl overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 border border-gray-100">
+                <div className="p-6">
+                  <p className="text-yellow-600 text-sm mb-2">{post.date}</p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">
+                    <Link href={`/blog/${post.slug}`} className="hover:text-yellow-600 transition-colors">
+                      {post.title}
+                    </Link>
+                  </h3>
+                  <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+                  <Link 
+                    href={`/blog/${post.slug}`}
+                    className="text-yellow-600 font-medium hover:text-yellow-700 inline-flex items-center"
+                  >
+                    Read more
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link 
+              href="/blog"
+              className="inline-flex items-center px-6 py-3 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+            >
+              View All Blog Posts
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>

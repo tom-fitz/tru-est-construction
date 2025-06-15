@@ -54,6 +54,22 @@ export default function AdminLayout({
               </li>
               <li>
                 <Link 
+                  href="/admin/content/services" 
+                  className="block py-2 px-4 rounded hover:bg-gray-800 transition-colors"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/admin/content/testimonials" 
+                  className="block py-2 px-4 rounded hover:bg-gray-800 transition-colors"
+                >
+                  Testimonials
+                </Link>
+              </li>
+              <li>
+                <Link 
                   href="/admin/blog" 
                   className="block py-2 px-4 rounded hover:bg-gray-800 transition-colors"
                 >

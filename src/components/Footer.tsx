@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-800 py-8">
+    <footer className="bg-gray-100 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
@@ -39,10 +39,10 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Contact Info</h3>
             <address className="not-italic text-gray-600 dark:text-gray-300">
-              <p>123 Construction Ave</p>
-              <p>Building City, BC 12345</p>
-              <p className="mt-2">Email: info@truest.com</p>
-              <p>Phone: (555) 123-4567</p>
+              <p>260 Cartwright Road</p>
+              <p>Wellesley, MA, 02482</p>
+              <p className="mt-2">Email: Rich@truestconstructionservices.com</p>
+              <p>Phone: (339) 298-1217</p>
             </address>
           </div>
         </div>

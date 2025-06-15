@@ -18,6 +18,30 @@ export default function AdminDashboard() {
           </Link>
         </div>
         
+        {/* Services Management Card */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Services</h2>
+          <p className="text-gray-600 mb-4">Manage your construction services and features.</p>
+          <Link 
+            href="/admin/content/services" 
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+          >
+            Manage Services
+          </Link>
+        </div>
+
+        {/* Testimonials Management Card */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Testimonials</h2>
+          <p className="text-gray-600 mb-4">Manage client testimonials and reviews.</p>
+          <Link 
+            href="/admin/content/testimonials" 
+            className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+          >
+            Manage Testimonials
+          </Link>
+        </div>
+        
         {/* Blog Posts Card */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">Blog Posts</h2>
