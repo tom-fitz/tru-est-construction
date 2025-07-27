@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '../../../../../../auth';
 import { getPageContent, updatePageContent } from '@/lib/db-storage';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { pageId: string } }
+  { params }: { params: any }
 ) {
   try {
     const session = await auth();
@@ -25,7 +26,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { pageId: string } }
+  { params }: { params: any }
 ) {
   try {
     const session = await auth();
