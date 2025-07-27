@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { auth } from '../../../../../../auth';
 import { getPageContent, updatePageContent } from '@/lib/db-storage';
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { pageId: string } }
+) {
   try {
     const session = await auth();
     if (!session) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-    const pageId = request.nextUrl.searchParams.get('pageId');
-    if (!pageId) {
-      return new NextResponse('Missing pageId', { status: 400 });
-    }
-    const content = await getPageContent(pageId);
+    
+    const content = await getPageContent(params.pageId);
     if (!content) {
       return new NextResponse('Content not found', { status: 404 });
     }
@@ -23,21 +23,22 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { pageId: string } }
+) {
   try {
     const session = await auth();
     if (!session) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-    const pageId = request.nextUrl.searchParams.get('pageId');
-    if (!pageId) {
-      return new NextResponse('Missing pageId', { status: 400 });
-    }
-    const { content } = await request.json();
+    
+    const { title, content } = await request.json();
     if (!content) {
       return new NextResponse('Content is required', { status: 400 });
     }
-    const updatedContent = await updatePageContent(pageId, content);
+    
+    const updatedContent = await updatePageContent(params.pageId, { title, content });
     return NextResponse.json(updatedContent);
   } catch (error) {
     console.error('Error updating page content:', error);

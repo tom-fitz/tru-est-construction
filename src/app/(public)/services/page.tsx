@@ -1,24 +1,10 @@
-import { getPageContent } from '@/lib/db-storage';
+import { getPageContent, getFeaturedServices } from '@/lib/db-storage';
 import Image from "next/image";
-
-const serviceCallouts = [
-  {
-    title: 'Quality Craftsmanship',
-    description: 'We take pride in delivering exceptional quality in every project, using the finest materials and skilled craftsmanship to ensure lasting results.'
-  },
-  {
-    title: 'Expert Team',
-    description: 'Our experienced team of professionals brings decades of combined expertise to every project, ensuring the highest standards of workmanship.'
-  },
-  {
-    title: 'Customer Focus',
-    description: 'We prioritize your needs and vision, working closely with you throughout the project to ensure complete satisfaction with the results.'
-  }
-];
 
 export default async function ServicesPage() {
   const page = await getPageContent('services');
   const servicesContent = page?.content || '';
+  const featuredServices = await getFeaturedServices();
 
   return (
     <div className="flex flex-col">
@@ -58,26 +44,38 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      {/* Service Highlights */}
-      <section className="py-16 bg-gray-100 dark:bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Why Choose Our Services</h2>
-            <div className="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+      {/* Featured Services */}
+      {featuredServices.length > 0 && (
+        <section className="py-16 bg-gray-100 dark:bg-gray-900">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Featured Services</h2>
+              <div className="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {featuredServices.slice(0, 3).map((service) => (
+                <div 
+                  key={service.id}
+                  className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl"
+                >
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{service.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">{service.description}</p>
+                  {service.features.length > 0 && (
+                    <div className="space-y-2">
+                      {service.features.slice(0, 3).map((feature, index) => (
+                        <div key={index} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                          <span className="h-1.5 w-1.5 bg-yellow-500 rounded-full"></span>
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {serviceCallouts.map((callout, index) => (
-              <div 
-                key={index}
-                className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl"
-              >
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{callout.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300">{callout.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-16 bg-yellow-500">

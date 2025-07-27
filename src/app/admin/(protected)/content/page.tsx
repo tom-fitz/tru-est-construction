@@ -38,7 +38,7 @@ export default function ContentManagement() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Content Management</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
       </div>
 
       {error && (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCallout, updateCallout } from '@/lib/db-storage';
-import { auth } from '@/lib/auth';
+import { auth } from '../../../../../../auth';
 
 export async function GET(request: NextRequest) {
   try {

@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
+import { auth } from '../../../../../auth';
 import { getPageContent, getAllPageContent, updatePageContent } from '@/lib/db-storage';
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
     if (id) {
       const page = await getPageContent(id);
       if (!page) {
@@ -23,14 +29,19 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-
-  if (!id) {
-    return NextResponse.json({ error: 'Page ID is required' }, { status: 400 });
-  }
-
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Page ID is required' }, { status: 400 });
+    }
+
     const data = await request.json();
     const updatedPage = await updatePageContent(id, {
       title: data.title,

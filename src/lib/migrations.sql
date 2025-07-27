@@ -41,6 +41,7 @@ INSERT INTO pages (id, title, content, last_updated)
 VALUES 
     ('home', 'Home', '<p>Welcome to Tru-Est Construction</p>', CURRENT_TIMESTAMP),
     ('about', 'About Us', '<p>Learn more about Tru-Est Construction</p>', CURRENT_TIMESTAMP),
+    ('services', 'Our Services', '<p>We offer comprehensive construction services including residential and commercial projects. Our team of experienced professionals is dedicated to delivering high-quality results that exceed your expectations.</p><p>From initial planning to final completion, we handle every aspect of your construction project with precision and care. Our commitment to quality craftsmanship and attention to detail ensures that your vision becomes reality.</p>', CURRENT_TIMESTAMP),
     ('contact', 'Contact Us', '<p>Get in touch with Tru-Est Construction</p>', CURRENT_TIMESTAMP)
 ON CONFLICT (id) DO NOTHING;
 

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { auth } from '../../../../../auth';
 import { 
   getBlogPosts, 
   getBlogPostById, 
@@ -9,10 +10,15 @@ import {
 } from '@/lib/db-storage';
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
     if (id) {
       const post = await getBlogPostById(parseInt(id, 10));
       if (!post) {
@@ -31,6 +37,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
     const data = await request.json();
     const newPost = await createBlogPost({
       title: data.title,
@@ -48,15 +59,20 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-  const action = searchParams.get('action');
-
-  if (!id) {
-    return NextResponse.json({ error: 'Blog post ID is required' }, { status: 400 });
-  }
-
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    const action = searchParams.get('action');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Blog post ID is required' }, { status: 400 });
+    }
+
     if (action === 'toggle-publish') {
       const data = await request.json();
       const updatedPost = await toggleBlogPostPublish(parseInt(id, 10), data.published);
@@ -86,14 +102,19 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-
-  if (!id) {
-    return NextResponse.json({ error: 'Blog post ID is required' }, { status: 400 });
-  }
-
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Blog post ID is required' }, { status: 400 });
+    }
+
     const success = await deleteBlogPost(parseInt(id, 10));
     if (!success) {
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });

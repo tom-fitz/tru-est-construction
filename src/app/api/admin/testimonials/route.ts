@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '../../../../../auth';
 import { getTestimonials, createTestimonial, updateTestimonial, deleteTestimonial, toggleTestimonialFeatured } from '@/lib/db-storage';
 
 export async function GET() {
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
     const testimonials = await getTestimonials();
     return NextResponse.json(testimonials);
   } catch (error) {
@@ -16,6 +22,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
     const data = await request.json();
     const testimonial = await createTestimonial(data);
     return NextResponse.json(testimonial);
@@ -30,6 +41,11 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     const action = searchParams.get('action');
@@ -63,6 +79,11 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 

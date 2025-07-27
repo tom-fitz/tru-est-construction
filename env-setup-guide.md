@@ -1,6 +1,6 @@
 # Environment Variables Setup Guide
 
-To use Google authentication with this application, you'll need to set up the following environment variables in a `.env.local` file in the project root:
+To use Google SSO authentication with this application, you'll need to set up the following environment variables in a `.env.local` file in the project root:
 
 ```
 # Google OAuth credentials (required for admin authentication)
@@ -11,10 +11,6 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 # Generate with: openssl rand -base64 32
 NEXTAUTH_SECRET=your-nextauth-secret
 NEXTAUTH_URL=http://localhost:3000
-
-# Comma-separated list of emails allowed to access the admin area
-# Leave empty to allow all emails (for development only)
-ALLOWED_ADMIN_EMAILS=example@gmail.com,another@gmail.com
 ```
 
 ## How to get Google OAuth credentials
@@ -39,6 +35,18 @@ openssl rand -base64 32
 
 Use the generated string as your `NEXTAUTH_SECRET`.
 
-## Allowed Admin Emails
+## Authentication Flow
 
-For production, set `ALLOWED_ADMIN_EMAILS` to a comma-separated list of email addresses that should have access to the admin area. For development, you can leave this empty to allow any Gmail account to sign in. 
+This application uses Google SSO for admin authentication. Only authorized email addresses can access the admin dashboard. The allowed email addresses are configured in the `auth.ts` file in the project root.
+
+Currently, only the following email address has admin access:
+- `tpfitz42@gmail.com`
+
+To add more authorized emails, edit the `ALLOWED_ADMIN_EMAILS` array in `auth.ts`.
+
+## Security Notes
+
+- Only Gmail accounts are allowed to sign in
+- Only email addresses in the `ALLOWED_ADMIN_EMAILS` array can access admin functionality
+- All admin API routes are protected with authentication checks
+- Unauthenticated users are redirected to `/signin` when trying to access admin routes 

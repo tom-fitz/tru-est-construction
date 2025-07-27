@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-const ALLOWED_EMAILS = process.env.ALLOWED_ADMIN_EMAILS ? process.env.ALLOWED_ADMIN_EMAILS.split(',') : [];
+// Array of allowed admin emails - only these emails can access admin functionality
+const ALLOWED_ADMIN_EMAILS = ["tpfitz42@gmail.com"];
 
 export const {
   handlers: { GET, POST },
@@ -17,12 +18,29 @@ export const {
   ],
   callbacks: {
     async signIn({ user }: { user: any }) {
-      if (ALLOWED_EMAILS.length === 0) return true;
-      return ALLOWED_EMAILS.includes(user.email);
+      // Only allow sign in if the user's email is in the allowed list
+      return ALLOWED_ADMIN_EMAILS.includes(user.email);
     },
+    async session({ session, token }: { session: any; token: any }) {
+      // Add user ID to session
+      if (session.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    async jwt({ token, user }: { token: any; user: any }) {
+      // Add user ID to token
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    }
   },
   pages: {
     signIn: '/signin',
     error: '/signin',
+  },
+  session: {
+    strategy: 'jwt',
   },
 }); 

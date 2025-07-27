@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(signInUrl);
   }
 
-  // If authenticated user tries to access signin page
+  // If authenticated user tries to access signin page, redirect to admin
   if (isSignInRoute && session) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
