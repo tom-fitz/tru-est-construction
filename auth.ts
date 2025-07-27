@@ -2,7 +2,11 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 // Array of allowed admin emails - only these emails can access admin functionality
-const ALLOWED_ADMIN_EMAILS = ["tpfitz42@gmail.com"];
+const ALLOWED_ADMIN_EMAILS = [
+  "tpfitz42@gmail.com", 
+  "rj@thollsecure.com", 
+  "rich@truestconstructionservices.com"
+];
 
 export const {
   handlers: { GET, POST },
@@ -19,6 +23,9 @@ export const {
   callbacks: {
     async signIn({ user }: { user: any }) {
       // Only allow sign in if the user's email is in the allowed list
+      if (!user.email) {
+        return false;
+      }
       return ALLOWED_ADMIN_EMAILS.includes(user.email);
     },
     async session({ session, token }: { session: any; token: any }) {
