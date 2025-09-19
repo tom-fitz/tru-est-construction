@@ -4,8 +4,8 @@ import GoogleProvider from "next-auth/providers/google";
 // Array of allowed admin emails - only these emails can access admin functionality
 const ALLOWED_ADMIN_EMAILS = [
   "tpfitz42@gmail.com", 
-  "rj@thollsecure.com", 
-  "rich@truestconstructionservices.com"
+  "rjtholl@gmail.com", 
+  "jmrpop@gmail.com"
 ];
 
 export const {
