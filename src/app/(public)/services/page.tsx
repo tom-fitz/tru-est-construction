@@ -1,6 +1,9 @@
 import { getPageContent, getFeaturedServices } from '@/lib/db-storage';
 import Image from "next/image";
 
+// ISR: Revalidate every 60 seconds - balances freshness with performance
+export const revalidate = 60;
+
 export default async function ServicesPage() {
   const page = await getPageContent('services');
   const servicesContent = page?.content || '';

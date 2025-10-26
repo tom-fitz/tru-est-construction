@@ -9,6 +9,9 @@ interface HomePageContent {
   storyContent: string;
 }
 
+// ISR: Revalidate every 60 seconds - balances freshness with performance
+export const revalidate = 60;
+
 export default async function Home() {
   // Get the home page content and recent blog posts from the database
   const [page, posts] = await Promise.all([

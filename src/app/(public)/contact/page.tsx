@@ -1,5 +1,8 @@
 import { getPageContent } from '@/lib/db-storage';
 
+// ISR: Revalidate every 60 seconds - balances freshness with performance
+export const revalidate = 60;
+
 export default async function Contact() {
   // Get the contact page content from the database
   const page = await getPageContent('contact');

@@ -1,6 +1,9 @@
 import { getPageContent } from '@/lib/db-storage';
 import Image from "next/image";
 
+// ISR: Revalidate every 60 seconds - balances freshness with performance
+export const revalidate = 60;
+
 const values = [
   {
     title: 'Quality',

@@ -3,6 +3,9 @@ import { getBlogPost } from '@/lib/db-storage';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
+// ISR: Revalidate every 60 seconds - balances freshness with performance
+export const revalidate = 60;
+
 export default async function BlogPost({ params }: { params: any }) {
   const slug = params.slug;
   // Get the blog post from the database

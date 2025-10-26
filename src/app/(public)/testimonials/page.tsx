@@ -1,5 +1,8 @@
 import { getPageContent } from '@/lib/db-storage';
 
+// ISR: Revalidate every 60 seconds - balances freshness with performance
+export const revalidate = 60;
+
 // Sample testimonials data - in a real app, this would come from your database
 const testimonials = [
   {
