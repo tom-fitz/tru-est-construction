@@ -1,8 +1,10 @@
 import { getBlogPosts } from '@/lib/db-storage';
 import Link from "next/link";
 
-// ISR: Revalidate every 60 seconds - balances freshness with performance
-export const revalidate = 60;
+// Always fetch fresh data from database (no caching)
+// Perfect for content editing - see changes immediately
+// TODO: Once content is stable, change to `export const revalidate = 60;` for better performance
+export const revalidate = 0;
 
 export default async function Blog() {
   // Get all blog posts from the database

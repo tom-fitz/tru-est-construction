@@ -9,8 +9,10 @@ interface HomePageContent {
   storyContent: string;
 }
 
-// ISR: Revalidate every 60 seconds - balances freshness with performance
-export const revalidate = 60;
+// Always fetch fresh data from database (no caching)
+// Perfect for content editing - see changes immediately
+// TODO: Once content is stable, change to `export const revalidate = 60;` for better performance
+export const revalidate = 0;
 
 export default async function Home() {
   // Get the home page content and recent blog posts from the database
