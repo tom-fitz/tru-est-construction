@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { PageContent } from '@/lib/db-storage';
 import Link from 'next/link';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface HomePageContent {
   heroTitle: string;
@@ -224,15 +225,20 @@ export default function ContentEditor({ params }: { params: any }) {
             <label htmlFor="heroDescription" className="block text-sm font-medium text-gray-700 mb-1">
               Hero Description
             </label>
-            <textarea
-              id="heroDescription"
-              name="heroDescription"
+            <RichTextEditor
               value={homePageData.heroDescription}
-              onChange={handleChange}
-              rows={3}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900"
-              required
+              onChange={(value) => {
+                setHomePageData(prev => ({
+                  ...prev,
+                  heroDescription: value,
+                }));
+              }}
+              placeholder="Enter hero description..."
+              id="heroDescription"
             />
+            <p className="mt-1 text-sm text-gray-500">
+              Use the toolbar to format your text with bold, italic, and underline.
+            </p>
           </div>
         </div>
       )}
@@ -256,19 +262,21 @@ export default function ContentEditor({ params }: { params: any }) {
           </div>
           <div>
             <label htmlFor="storyContent" className="block text-sm font-medium text-gray-700 mb-1">
-              Content (HTML)
+              Content
             </label>
-            <textarea
-              id="storyContent"
-              name="storyContent"
+            <RichTextEditor
               value={homePageData.storyContent}
-              onChange={handleChange}
-              rows={15}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 font-mono text-sm text-gray-900"
-              required
+              onChange={(value) => {
+                setHomePageData(prev => ({
+                  ...prev,
+                  storyContent: value,
+                }));
+              }}
+              placeholder="Enter your content here..."
+              id="storyContent"
             />
             <p className="mt-1 text-sm text-gray-500">
-              You can use HTML tags for formatting. For example: &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, etc.
+              Use the toolbar to format your text with bold, italic, and underline.
             </p>
           </div>
         </div>
@@ -295,17 +303,22 @@ export default function ContentEditor({ params }: { params: any }) {
 
       <div className="mb-4">
         <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-          Content (HTML)
+          Content
         </label>
-        <textarea
-          id="content"
-          name="content"
+        <RichTextEditor
           value={formData.content}
-          onChange={handleChange}
-          rows={15}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm text-gray-900"
-          required
+          onChange={(value) => {
+            setFormData(prev => ({
+              ...prev,
+              content: value,
+            }));
+          }}
+          placeholder="Enter your content here..."
+          id="content"
         />
+        <p className="mt-1 text-sm text-gray-500">
+          Use the toolbar to format your text with bold, italic, and underline.
+        </p>
       </div>
     </>
   );
@@ -369,7 +382,7 @@ export default function ContentEditor({ params }: { params: any }) {
             activeTab === 'hero' ? (
               <div className="space-y-4">
                 <h1 className="text-4xl font-bold">{homePageData.heroTitle}</h1>
-                <p className="text-xl">{homePageData.heroDescription}</p>
+                <div className="text-xl" dangerouslySetInnerHTML={{ __html: homePageData.heroDescription || '' }} />
               </div>
             ) : (
               <div className="space-y-4">

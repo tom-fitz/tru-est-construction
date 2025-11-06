@@ -80,10 +80,15 @@ export async function updatePageContent(
   id: string,
   data: Pick<PageContent, 'title' | 'content'>
 ): Promise<PageContent | null> {
+  // Use UPSERT to create page if it doesn't exist
   const result = await sql`
-    UPDATE pages
-    SET title = ${data.title}, content = ${data.content}, last_updated = CURRENT_TIMESTAMP
-    WHERE id = ${id}
+    INSERT INTO pages (id, title, content, last_updated)
+    VALUES (${id}, ${data.title}, ${data.content}, CURRENT_TIMESTAMP)
+    ON CONFLICT (id) 
+    DO UPDATE SET 
+      title = ${data.title}, 
+      content = ${data.content}, 
+      last_updated = CURRENT_TIMESTAMP
     RETURNING id, title, content, last_updated as "lastUpdated"
   `;
   return (result[0] as PageContent) || null;
@@ -269,37 +274,29 @@ export async function updateService(
   id: number,
   data: Partial<Omit<Service, 'id' | 'createdAt' | 'updatedAt'>>
 ): Promise<Service | null> {
-  const updates = [];
-  
-  if (data.title !== undefined) {
-    updates.push(sql`title = ${data.title}`);
-  }
-  if (data.description !== undefined) {
-    updates.push(sql`description = ${data.description}`);
-  }
-  if (data.icon !== undefined) {
-    updates.push(sql`icon = ${data.icon}`);
-  }
-  if (data.features !== undefined) {
-    updates.push(sql`features = ${JSON.stringify(data.features)}`);
-  }
-  if (data.orderIndex !== undefined) {
-    updates.push(sql`order_index = ${data.orderIndex}`);
-  }
-  if (data.isFeatured !== undefined) {
-    updates.push(sql`is_featured = ${data.isFeatured}`);
-  }
+  // First get the current service
+  const current = await getService(id);
+  if (!current) return null;
 
-  if (updates.length === 0) return null;
+  // Merge current values with new data
+  const title = data.title !== undefined ? data.title : current.title;
+  const description = data.description !== undefined ? data.description : current.description;
+  const icon = data.icon !== undefined ? data.icon : current.icon;
+  const features = data.features !== undefined ? JSON.stringify(data.features) : JSON.stringify(current.features);
+  const orderIndex = data.orderIndex !== undefined ? data.orderIndex : current.orderIndex;
+  const isFeatured = data.isFeatured !== undefined ? data.isFeatured : current.isFeatured;
 
-  // Combine all updates with commas
-  const updateClause = updates.reduce((acc, curr, idx) => 
-    idx === 0 ? curr : sql`${acc}, ${curr}`
-  );
-
-  const query = sql`
+  // Update all fields
+  const result = await sql`
     UPDATE services
-    SET ${updateClause}
+    SET 
+      title = ${title},
+      description = ${description},
+      icon = ${icon},
+      features = ${features},
+      order_index = ${orderIndex},
+      is_featured = ${isFeatured},
+      updated_at = CURRENT_TIMESTAMP
     WHERE id = ${id}
     RETURNING 
       id, 
@@ -313,7 +310,6 @@ export async function updateService(
       updated_at as "updatedAt"
   `;
 
-  const result = await query;
   return (result[0] as Service) || null;
 }
 
@@ -444,40 +440,31 @@ export async function updateTestimonial(
   id: number,
   data: Partial<Omit<Testimonial, 'id' | 'createdAt' | 'updatedAt'>>
 ): Promise<Testimonial | null> {
-  const updates = [];
-  
-  if (data.name !== undefined) {
-    updates.push(sql`name = ${data.name}`);
-  }
-  if (data.role !== undefined) {
-    updates.push(sql`role = ${data.role}`);
-  }
-  if (data.quote !== undefined) {
-    updates.push(sql`quote = ${data.quote}`);
-  }
-  if (data.rating !== undefined) {
-    updates.push(sql`rating = ${data.rating}`);
-  }
-  if (data.projectType !== undefined) {
-    updates.push(sql`project_type = ${data.projectType}`);
-  }
-  if (data.imagePath !== undefined) {
-    updates.push(sql`image_path = ${data.imagePath}`);
-  }
-  if (data.isFeatured !== undefined) {
-    updates.push(sql`is_featured = ${data.isFeatured}`);
-  }
+  // First get the current testimonial
+  const current = await getTestimonial(id);
+  if (!current) return null;
 
-  if (updates.length === 0) return null;
+  // Merge current values with new data
+  const name = data.name !== undefined ? data.name : current.name;
+  const role = data.role !== undefined ? data.role : current.role;
+  const quote = data.quote !== undefined ? data.quote : current.quote;
+  const rating = data.rating !== undefined ? data.rating : current.rating;
+  const projectType = data.projectType !== undefined ? data.projectType : current.projectType;
+  const imagePath = data.imagePath !== undefined ? data.imagePath : current.imagePath;
+  const isFeatured = data.isFeatured !== undefined ? data.isFeatured : current.isFeatured;
 
-  // Combine all updates with commas
-  const updateClause = updates.reduce((acc, curr, idx) => 
-    idx === 0 ? curr : sql`${acc}, ${curr}`
-  );
-
-  const query = sql`
+  // Update all fields
+  const result = await sql`
     UPDATE testimonials
-    SET ${updateClause}
+    SET 
+      name = ${name},
+      role = ${role},
+      quote = ${quote},
+      rating = ${rating},
+      project_type = ${projectType},
+      image_path = ${imagePath},
+      is_featured = ${isFeatured},
+      updated_at = CURRENT_TIMESTAMP
     WHERE id = ${id}
     RETURNING 
       id,
@@ -492,7 +479,6 @@ export async function updateTestimonial(
       updated_at as "updatedAt"
   `;
 
-  const result = await query;
   return (result[0] as Testimonial) || null;
 }
 

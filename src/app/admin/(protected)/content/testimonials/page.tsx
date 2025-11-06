@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Testimonial } from '@/lib/db-storage';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -269,13 +270,14 @@ export default function TestimonialsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Quote
                 </label>
-                <textarea
+                <RichTextEditor
                   value={formData.quote}
-                  onChange={(e) => setFormData(prev => ({ ...prev, quote: e.target.value }))}
-                  className="w-full text-gray-700 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  rows={3}
-                  required
+                  onChange={(value) => setFormData(prev => ({ ...prev, quote: value }))}
+                  placeholder="Enter testimonial quote..."
                 />
+                <p className="mt-1 text-sm text-gray-500">
+                  Use the toolbar to format text with bold, italic, and underline.
+                </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

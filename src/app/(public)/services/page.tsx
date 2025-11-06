@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export default async function ServicesPage() {
   const page = await getPageContent('services');
-  const servicesContent = page?.content || '';
+  const servicesContent = page?.content || '<p>We offer comprehensive construction services including residential and commercial projects. Our team of experienced professionals is dedicated to delivering high-quality results that exceed your expectations.</p><p>From initial planning to final completion, we handle every aspect of your construction project with precision and care. Our commitment to quality craftsmanship and attention to detail ensures that your vision becomes reality.</p>';
   const featuredServices = await getFeaturedServices();
 
   return (

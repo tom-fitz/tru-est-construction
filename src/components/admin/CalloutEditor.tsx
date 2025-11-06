@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Callout, CalloutItem } from '@/lib/db-storage';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface CalloutEditorProps {
   callout: Callout;
@@ -70,13 +71,15 @@ export default function CalloutEditor({ callout, onSave }: CalloutEditorProps) {
                 <label htmlFor={`item-description-${index}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Description
                 </label>
-                <textarea
-                  id={`item-description-${index}`}
+                <RichTextEditor
                   value={item.description}
-                  onChange={(e) => handleItemChange(index, 'description', e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  onChange={(value) => handleItemChange(index, 'description', value)}
+                  placeholder="Enter description..."
+                  id={`item-description-${index}`}
                 />
+                <p className="mt-1 text-sm text-gray-500">
+                  Use the toolbar to format text with bold, italic, and underline.
+                </p>
               </div>
             </div>
           </div>

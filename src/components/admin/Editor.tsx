@@ -5,13 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import dynamic from 'next/dynamic';
-
-// Dynamically import TinyMCE to avoid SSR issues
-const Editor = dynamic(() => import('@tinymce/tinymce-react').then(mod => mod.Editor), {
-  ssr: false,
-  loading: () => <p>Loading editor...</p>
-});
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface PageContent {
   id: string;
@@ -103,7 +97,7 @@ export default function ContentEditor() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Manage Page Content</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">Manage Page Content</h1>
       <div className="grid gap-8">
         {PAGES.map((page) => (
           <Card key={page.id}>
@@ -111,31 +105,21 @@ export default function ContentEditor() {
               <CardTitle>{page.name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <Editor
-                apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
-                initialValue={contents[page.id]?.content || ''}
-                init={{
-                  height: 500,
-                  menubar: true,
-                  plugins: [
-                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                    'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
-                  ],
-                  toolbar: 'undo redo | blocks | ' +
-                    'bold italic forecolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help',
-                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                }}
-                onEditorChange={(content: string) => {
+              <RichTextEditor
+                value={contents[page.id]?.content || ''}
+                onChange={(content: string) => {
                   handleSubmit(page.id, content);
                 }}
+                placeholder={`Enter content for ${page.name}...`}
+                id={`editor-${page.id}`}
               />
+              <p className="mt-2 text-sm text-gray-500">
+                Changes are saved automatically. Use the toolbar to format text with bold, italic, and underline.
+              </p>
             </CardContent>
           </Card>
         ))}
       </div>
     </div>
   );
-} 
+}

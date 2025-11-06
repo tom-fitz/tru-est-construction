@@ -1,16 +1,17 @@
-import Link from 'next/link';
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Admin - Tru-Est Construction',
-  description: 'Admin dashboard for Tru-Est Construction website',
-};
+import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/signin' });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Admin Header */}
@@ -20,20 +21,28 @@ export default function AdminLayout({
             <Link href="/admin" className="text-xl font-bold">
               Tru-Est Admin
             </Link>
-            <Link 
-              href="/" 
-              className="text-sm bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1 rounded"
-              target="_blank"
-            >
-              View Site
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link 
+                href="/" 
+                className="text-sm bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1 rounded transition-colors"
+                target="_blank"
+              >
+                View Site
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="flex flex-grow">
+      <div className="flex flex-grow overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-900 text-white">
+        <aside className="w-64 flex-shrink-0 bg-gray-900 text-white overflow-y-auto">
           <nav className="p-4">
             <ul className="space-y-2">
               <li>
@@ -81,7 +90,7 @@ export default function AdminLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-grow bg-gray-100">
+        <main className="flex-1 bg-gray-100 min-w-0 overflow-y-auto">
           <div className="p-6">
             {children}
           </div>
@@ -89,4 +98,4 @@ export default function AdminLayout({
       </div>
     </div>
   );
-} 
+}
