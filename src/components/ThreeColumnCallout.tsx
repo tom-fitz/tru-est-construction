@@ -25,8 +25,8 @@ export default function ThreeColumnCallout({
               className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl"
             >
               <div className="p-6">
-                <h3 className="font-bold text-gray-900 mb-4">{item.title}</h3>
-                <p className="text-gray-600">
+                <h3 className="font-bold text-black mb-4" style={{ color: '#000000' }}>{item.title}</h3>
+                <p className="text-black" style={{ color: '#000000' }}>
                   {item.description}
                 </p>
               </div>

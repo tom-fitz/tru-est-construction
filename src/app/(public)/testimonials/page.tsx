@@ -1,4 +1,6 @@
 import { getPageContent } from '@/lib/db-storage';
+import PageHeader from '@/components/PageHeader';
+import CallToAction from '@/components/CallToAction';
 
 // Always fetch fresh data from database (no caching)
 // Perfect for content editing - see changes immediately
@@ -69,42 +71,33 @@ export default async function TestimonialsPage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative h-[400px] w-full">
-        <div className="absolute inset-0 bg-gray-900/70 z-10" />
-        <div className="relative h-full w-full">
-          <div className="absolute inset-0 bg-gray-500" />
-          <div className="container mx-auto px-4 h-full flex items-center justify-center relative z-20">
-            <div className="text-center text-white">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Client Testimonials</h1>
-              <p className="text-xl mb-8 max-w-2xl mx-auto">See what our clients say about their experience with Tru-Est Construction</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHeader 
+        title="Client Testimonials" 
+        description="See what our clients say about their experience with Tru-Est Construction"
+      />
 
       {/* Testimonials Grid */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section className="py-16 bg-white dark:bg-tcs-navy-900">
         <div className="container mx-auto px-4">
           {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-500 mb-2">500+</div>
-              <div className="text-gray-600 dark:text-gray-300">Projects Completed</div>
+              <div className="text-4xl font-bold text-tcs-blue mb-2">500+</div>
+              <div className="text-black dark:text-gray-300" style={{ color: '#000000' }}>Projects Completed</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-500 mb-2">98%</div>
-              <div className="text-gray-600 dark:text-gray-300">Client Satisfaction</div>
+              <div className="text-4xl font-bold text-tcs-blue mb-2">98%</div>
+              <div className="text-black dark:text-gray-300" style={{ color: '#000000' }}>Client Satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-500 mb-2">15+</div>
-              <div className="text-gray-600 dark:text-gray-300">Years Experience</div>
+              <div className="text-4xl font-bold text-tcs-blue mb-2">45+</div>
+              <div className="text-black dark:text-gray-300" style={{ color: '#000000' }}>Years Experience</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-500 mb-2">100%</div>
-              <div className="text-gray-600 dark:text-gray-300">Licensed & Insured</div>
+              <div className="text-4xl font-bold text-tcs-blue mb-2">100%</div>
+              <div className="text-black dark:text-gray-300" style={{ color: '#000000' }}>Licensed & Insured</div>
             </div>
-          </div>
+          </div> */}
 
           {/* Testimonials Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -115,24 +108,23 @@ export default async function TestimonialsPage() {
               >
                 <div className="p-6">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden mr-4">
-                      {/* Add actual images later */}
+                    {/* <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-600 overflow-hidden mr-4">
                       <div className="w-full h-full bg-gray-300 dark:bg-gray-500" />
-                    </div>
+                    </div> */}
                     <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white">{testimonial.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{testimonial.role}</p>
+                      <h3 className="font-bold text-black dark:text-white">{testimonial.name}</h3>
+                      <p className="text-sm text-black dark:text-gray-300">{testimonial.role}</p>
                     </div>
                   </div>
                   <div className="mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <span key={i} className="text-yellow-500">★</span>
+                      <span key={i} className="text-tcs-blue">★</span>
                     ))}
                   </div>
-                  <blockquote className="text-gray-600 dark:text-gray-300 italic mb-4">
+                  <blockquote className="text-black dark:text-gray-300 italic mb-4">
                     &quot;{testimonial.quote}&quot;
                   </blockquote>
-                  <div className="text-sm text-yellow-600 dark:text-yellow-500 font-medium">
+                  <div className="text-sm text-tcs-blue font-medium">
                     {testimonial.project}
                   </div>
                 </div>
@@ -144,7 +136,7 @@ export default async function TestimonialsPage() {
 
       {/* Additional Content Section */}
       {testimonialsContent && (
-        <section className="py-16 bg-gray-100 dark:bg-gray-900">
+        <section className="py-16 bg-gray-100 dark:bg-tcs-navy">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
               <div className="prose dark:prose-invert mx-auto">
@@ -155,19 +147,11 @@ export default async function TestimonialsPage() {
         </section>
       )}
 
-      {/* CTA Section */}
-      <section className="py-16 bg-yellow-500">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">Ready to Start Your Project?</h2>
-          <p className="text-xl mb-8 text-gray-900">Join our satisfied clients and experience the Tru-Est difference</p>
-          <a 
-            href="/contact" 
-            className="inline-block bg-gray-900 text-white font-bold py-3 px-8 rounded-md hover:bg-gray-800 transition-colors"
-          >
-            Get a Free Quote
-          </a>
-        </div>
-      </section>
+      <CallToAction 
+        title="Ready to Start Your Project?"
+        description="Join our satisfied clients and experience the TCS difference"
+        buttonText="Get a Free Quote"
+      />
     </div>
   );
 } 

@@ -9,7 +9,7 @@ export default function PublicLayout({
   return (
     <>
       <Navigation />
-      <main className="flex-grow">
+      <main className="flex-grow pt-[85px]">
         {children}
       </main>
       <Footer />

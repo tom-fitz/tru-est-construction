@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Service } from '@/lib/db-storage';
-import { PlusIcon, PencilIcon, TrashIcon, StarIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import Modal from '@/components/admin/Modal';
 
 type ActiveTab = 'content' | 'services';
 
@@ -224,39 +225,39 @@ export default function ServicesManagement() {
     }
   };
 
-  const handleMoveService = async (id: number, direction: 'up' | 'down') => {
-    const index = services.findIndex(s => s.id === id);
-    if (index === -1) return;
+  // const handleMoveService = async (id: number, direction: 'up' | 'down') => {
+  //   const index = services.findIndex(s => s.id === id);
+  //   if (index === -1) return;
     
-    if (direction === 'up' && index === 0) return;
-    if (direction === 'down' && index === services.length - 1) return;
+  //   if (direction === 'up' && index === 0) return;
+  //   if (direction === 'down' && index === services.length - 1) return;
 
-    const swapIndex = direction === 'up' ? index - 1 : index + 1;
-    const currentService = services[index];
-    const swapService = services[swapIndex];
+  //   const swapIndex = direction === 'up' ? index - 1 : index + 1;
+  //   const currentService = services[index];
+  //   const swapService = services[swapIndex];
 
-    try {
-      // Swap order indices
-      await Promise.all([
-        fetch(`/api/admin/services?id=${currentService.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderIndex: swapService.orderIndex }),
-        }),
-        fetch(`/api/admin/services?id=${swapService.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderIndex: currentService.orderIndex }),
-        }),
-      ]);
+  //   try {
+  //     // Swap order indices
+  //     await Promise.all([
+  //       fetch(`/api/admin/services?id=${currentService.id}`, {
+  //         method: 'PUT',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify({ orderIndex: swapService.orderIndex }),
+  //       }),
+  //       fetch(`/api/admin/services?id=${swapService.id}`, {
+  //         method: 'PUT',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify({ orderIndex: currentService.orderIndex }),
+  //       }),
+  //     ]);
 
-      await loadData();
-      setError(null);
-    } catch (error) {
-      console.error('Error moving service:', error);
-      setError('Failed to reorder services. Please try again.');
-    }
-  };
+  //     await loadData();
+  //     setError(null);
+  //   } catch (error) {
+  //     console.error('Error moving service:', error);
+  //     setError('Failed to reorder services. Please try again.');
+  //   }
+  // };
 
   const resetServiceForm = () => {
     setEditingService(null);
@@ -426,11 +427,11 @@ export default function ServicesManagement() {
       {/* Services Manager */}
       {activeTab === 'services' && (
         <div className="space-y-4">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
             <p className="text-sm text-gray-700">
               <strong>💡 Tip:</strong> Use the arrows to reorder services. Only services marked as &quot;Featured&quot; (⭐) will appear on the public services page (max 3).
             </p>
-          </div>
+          </div> */}
 
           {services.length === 0 ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
@@ -453,7 +454,7 @@ export default function ServicesManagement() {
                   className="bg-white rounded-lg shadow-md p-6 flex items-start gap-4"
                 >
                   {/* Reorder Buttons */}
-                  <div className="flex flex-col gap-1">
+                  {/* <div className="flex flex-col gap-1">
                     <button
                       onClick={() => handleMoveService(service.id, 'up')}
                       disabled={index === 0}
@@ -478,13 +479,13 @@ export default function ServicesManagement() {
                     >
                       <ArrowDownIcon className="h-5 w-5" />
                     </button>
-                  </div>
+                  </div> */}
 
                   {/* Service Content */}
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm text-gray-500 font-mono">#{index + 1}</span>
-                      <h2 className="text-xl font-semibold">{service.title}</h2>
+                      <h2 className="text-xl text-black font-semibold">{service.title}</h2>
                       <button
                         onClick={() => handleToggleFeatured(service.id, service.isFeatured)}
                         className="text-yellow-500 hover:text-yellow-600 transition-colors"
@@ -535,116 +536,120 @@ export default function ServicesManagement() {
       )}
 
       {/* Service Edit/Create Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">
-              {editingService ? 'Edit Service' : 'Add New Service'}
-            </h2>
-            <form onSubmit={handleServiceSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={serviceFormData.title}
-                  onChange={(e) => setServiceFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  value={serviceFormData.description}
-                  onChange={(e) => setServiceFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  rows={3}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Icon (Heroicon name)
-                </label>
-                <input
-                  type="text"
-                  value={serviceFormData.icon}
-                  onChange={(e) => setServiceFormData(prev => ({ ...prev, icon: e.target.value }))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="e.g., wrench-screwdriver"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Features
-                </label>
-                <div className="space-y-2">
-                  {serviceFormData.features.map((feature, index) => (
-                    <div key={index} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={feature}
-                        onChange={(e) => updateFeature(index, e.target.value)}
-                        className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder={`Feature ${index + 1}`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeFeature(index)}
-                        className="px-3 py-2 text-red-600 hover:text-red-700"
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  ))}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          resetServiceForm();
+        }}
+        title={editingService ? 'Edit Service' : 'Add New Service'}
+      >
+        <form onSubmit={handleServiceSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-tcs-navy-900 font-semibold mb-2">
+              Title
+            </label>
+            <input
+              type="text"
+              value={serviceFormData.title}
+              onChange={(e) => setServiceFormData(prev => ({ ...prev, title: e.target.value }))}
+              className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+              style={{ color: '#000000' }}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Description
+            </label>
+            <textarea
+              value={serviceFormData.description}
+              onChange={(e) => setServiceFormData(prev => ({ ...prev, description: e.target.value }))}
+              className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+              style={{ color: '#000000' }}
+              rows={3}
+              required
+            />
+          </div>
+          {/* <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Icon (Heroicon name)
+            </label>
+            <input
+              type="text"
+              value={serviceFormData.icon}
+              onChange={(e) => setServiceFormData(prev => ({ ...prev, icon: e.target.value }))}
+              className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+              style={{ color: '#000000' }}
+              placeholder="e.g., WrenchScrewdriverIcon"
+            />
+          </div> */}
+          <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Features
+            </label>
+            <div className="space-y-2">
+              {serviceFormData.features.map((feature, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={feature}
+                    onChange={(e) => updateFeature(index, e.target.value)}
+                    className="flex-1 px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                    style={{ color: '#000000' }}
+                    placeholder={`Feature ${index + 1}`}
+                  />
                   <button
                     type="button"
-                    onClick={addFeature}
-                    className="text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                    onClick={() => removeFeature(index)}
+                    className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
-                    <PlusIcon className="h-4 w-4" />
-                    Add Feature
+                    <TrashIcon className="h-5 w-5" />
                   </button>
                 </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="isFeatured"
-                  checked={serviceFormData.isFeatured}
-                  onChange={(e) => setServiceFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="isFeatured" className="text-sm font-medium text-gray-700">
-                  Featured Service (appears on public page)
-                </label>
-              </div>
-              <div className="flex justify-end gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    resetServiceForm();
-                  }}
-                  className="px-4 py-2 text-gray-700 hover:text-gray-900"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  {editingService ? 'Update Service' : 'Create Service'}
-                </button>
-              </div>
-            </form>
+              ))}
+              <button
+                type="button"
+                onClick={addFeature}
+                className="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1"
+              >
+                <PlusIcon className="h-4 w-4" />
+                Add Feature
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isFeatured"
+              checked={serviceFormData.isFeatured}
+              onChange={(e) => setServiceFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="isFeatured" className="text-sm font-semibold" style={{ color: '#000000' }}>
+              Featured Service (appears on public page)
+            </label>
+          </div>
+          <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
+            <button
+              type="button"
+              onClick={() => {
+                setIsModalOpen(false);
+                resetServiceForm();
+              }}
+              className="px-6 py-2.5 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
+            >
+              {editingService ? 'Update Service' : 'Create Service'}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

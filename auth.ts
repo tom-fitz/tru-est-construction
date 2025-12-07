@@ -5,7 +5,8 @@ import GoogleProvider from "next-auth/providers/google";
 const ALLOWED_ADMIN_EMAILS = [
   "tpfitz42@gmail.com", 
   "rjtholl@gmail.com", 
-  "jmrpop@gmail.com"
+  "jmrpop@gmail.com",
+  "jmn6724@gmail.com"
 ];
 
 export const {

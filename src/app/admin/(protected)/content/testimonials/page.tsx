@@ -5,6 +5,7 @@ import { Testimonial } from '@/lib/db-storage';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import Modal from '@/components/admin/Modal';
 
 export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -235,121 +236,88 @@ export default function TestimonialsPage() {
         ))}
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6">
-            <h2 className="text-2xl text-gray-700 font-bold mb-4">
-              {editingTestimonial ? 'Edit Testimonial' : 'Add New Testimonial'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full text-gray-700 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Role/Company
-                </label>
-                <input
-                  type="text"
-                  value={formData.role}
-                  onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                  className="w-full text-gray-700 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div> */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Quote
-                </label>
-                <RichTextEditor
-                  value={formData.quote}
-                  onChange={(value) => setFormData(prev => ({ ...prev, quote: value }))}
-                  placeholder="Enter testimonial quote..."
-                />
-                <p className="mt-1 text-sm text-gray-500">
-                  Use the toolbar to format text with bold, italic, and underline.
-                </p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Rating (1-5)
-                </label>
-                <input
-                  type="number"
-                  value={formData.rating}
-                  onChange={(e) => setFormData(prev => ({ ...prev, rating: Math.min(5, Math.max(1, parseInt(e.target.value) || 1)) }))}
-                  className="w-full text-gray-700 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  min="1"
-                  max="5"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Project Type
-                </label>
-                <input
-                  type="text"
-                  value={formData.projectType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
-                  className="w-full text-gray-700 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="e.g., Kitchen Remodel, Bathroom Renovation"
-                />
-              </div>
-              {/* <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Image Path
-                </label>
-                <input
-                  type="text"
-                  value={formData.imagePath}
-                  onChange={(e) => setFormData(prev => ({ ...prev, imagePath: e.target.value }))}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="/images/testimonials/person.jpg"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="isFeatured"
-                  checked={formData.isFeatured}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isFeatured: e.target.checked }))}
-                  className="h-4 text-gray-700 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="isFeatured" className="text-sm font-medium text-gray-700">
-                  Featured Testimonial
-                </label>
-              </div> */}
-              <div className="flex justify-end gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    resetForm();
-                  }}
-                  className="px-4 py-2 text-gray-700 hover:text-gray-900"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  {editingTestimonial ? 'Update Testimonial' : 'Create Testimonial'}
-                </button>
-              </div>
-            </form>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          resetForm();
+        }}
+        title={editingTestimonial ? 'Edit Testimonial' : 'Add New Testimonial'}
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Name
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+              style={{ color: '#000000' }}
+              required
+            />
           </div>
-        </div>
-      )}
+          <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Quote
+            </label>
+            <RichTextEditor
+              value={formData.quote}
+              onChange={(value) => setFormData(prev => ({ ...prev, quote: value }))}
+              placeholder="Enter testimonial quote..."
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Use the toolbar to format text with bold, italic, and underline.
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Rating (1-5)
+            </label>
+            <input
+              type="number"
+              value={formData.rating}
+              onChange={(e) => setFormData(prev => ({ ...prev, rating: Math.min(5, Math.max(1, parseInt(e.target.value) || 1)) }))}
+              className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+              style={{ color: '#000000' }}
+              min="1"
+              max="5"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2" style={{ color: '#000000' }}>
+              Project Type
+            </label>
+            <input
+              type="text"
+              value={formData.projectType}
+              onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
+              className="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+              style={{ color: '#000000' }}
+              placeholder="e.g., Kitchen Remodel, Bathroom Renovation"
+            />
+          </div>
+          <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
+            <button
+              type="button"
+              onClick={() => {
+                setIsModalOpen(false);
+                resetForm();
+              }}
+              className="px-6 py-2.5 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
+            >
+              {editingTestimonial ? 'Update Testimonial' : 'Create Testimonial'}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 } 

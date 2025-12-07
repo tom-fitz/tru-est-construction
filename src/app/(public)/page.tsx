@@ -40,122 +40,210 @@ export default async function Home() {
   
   return (
     <div className="flex flex-col">
-      {/* Hero Section with Header Image */}
-      <section className="relative min-h-[85vh] w-full flex items-center overflow-hidden bg-white">
-        {/* Background Image Container */}
-        <div className="absolute inset-0 -m-[5%]">
-          <Image
-            src="/hero_two.webp"
-            alt="Construction and Engineering"
-            fill
-            className="object-cover object-center"
-            priority
-            quality={100}
-          />
-        </div>
+      {/* Hero Section with Graph Paper Texture - Dark Theme */}
+      <section className="relative min-h-[90vh] w-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-tcs-navy-900 via-tcs-navy-800 to-gray-900">
+        {/* Graph Paper Background Layers with Higher Opacity and Dark Styling */}
+        <div 
+          className="absolute inset-0 opacity-60"
+          style={{
+            backgroundImage: `url('/graph-paper.svg')`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '100px 100px',
+            filter: 'invert(1) brightness(0.3) contrast(1.2)',
+          }}
+        />
+        <div 
+          className="absolute inset-0 opacity-50"
+          style={{
+            backgroundImage: `url('/graph-paper.svg')`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '150px 150px',
+            transform: 'rotate(45deg)',
+            filter: 'invert(1) brightness(0.25) contrast(1.1)',
+          }}
+        />
+        <div 
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage: `url('/graph-paper.svg')`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '200px 200px',
+            filter: 'invert(1) brightness(0.2) contrast(1.1)',
+          }}
+        />
 
-        {/* Darker Overlay for Better Contrast */}
-        <div className="absolute inset-0 bg-black/60" />
+        {/* Dark gradient overlay for depth and subtle blue tint */}
+        <div className="absolute inset-0 bg-gradient-to-b from-tcs-navy-900/80 via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-tcs-blue-900/10 to-transparent" />
 
-        {/* Content Container */}
-        <div className="relative w-full">
+        {/* Content Container - Centered */}
+        <div className="relative w-full z-10 pt-24 pb-16">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
-                {homeContent.heroTitle}
-              </h1>
-              <p className="text-lg md:text-xl text-white mb-8 max-w-xl drop-shadow-md">
-                {homeContent.heroDescription}
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link 
-                  href="/contact" 
-                  className="inline-flex items-center px-8 py-4 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-400 transition-colors shadow-lg"
-                >
-                  Start Your Project
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-                <Link 
-                  href="/about" 
-                  className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg bg-white/10 hover:bg-white/20 transition-colors border border-white/40 shadow-lg"
-                >
-                  Learn More About Us
-                </Link>
+            <div className="flex flex-col items-center text-center">
+              {/* Large Centered Logo */}
+              <div className="mb-8 transform hover:scale-105 transition-transform duration-300">
+                <Image
+                  src="/tcs_logo_transparent_buffer.png"
+                  alt="TCS Construction Management"
+                  width={600}
+                  height={280}
+                  className="h-auto w-full max-w-2xl mx-auto drop-shadow-2xl"
+                  priority
+                />
+              </div>
+
+              {/* Title and Description */}
+              <div className="max-w-4xl mt-8">
+                {/* <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+                  {homeContent.heroTitle}
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
+                  {homeContent.heroDescription}
+                </p> */}
+                
+                {/* CTA Buttons */}
+                <div className="flex flex-wrap justify-center gap-6">
+                  <Link 
+                    href="/contact" 
+                    className="inline-flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-tcs-blue-600 to-tcs-blue-500 text-white font-bold rounded-xl hover:from-tcs-blue-700 hover:to-tcs-blue-600 transition-all duration-300 shadow-2xl hover:shadow-tcs-blue-500/50 transform hover:-translate-y-1 hover:scale-105 border border-tcs-blue-400/30"
+                  >
+                    Start Your Project
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                  <Link 
+                    href="/about" 
+                    className="inline-flex items-center gap-2 px-10 py-4 text-white font-bold rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all duration-300 border-2 border-white/40 hover:border-white/60 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105"
+                  >
+                    Learn More About Us
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-24 bg-gray-100 relative">
-        {/* Decorative top border */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400"></div>
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+      {/* About Section - Light Theme for Contrast */}
+      <section className="relative py-20 md:py-28 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 overflow-hidden">
+        {/* Subtle texture overlays */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(92,179,232,0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(14,40,66,0.03),transparent_50%)]" />
+        
+        {/* Decorative top border with glow */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-tcs-blue-400 to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-tcs-blue-500/5 to-transparent"></div>
+        
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Image with enhanced styling */}
+            <div className="relative h-[450px] md:h-[550px] rounded-2xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-500 group border border-gray-200/50">
               <Image
                 src="/callout_01.jpg"
                 alt="Tru-Est Construction Team"
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
                 priority
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-tcs-navy-900/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-tcs-blue-500/10 rounded-2xl" />
             </div>
-            <div>
-              <span className="text-yellow-600 font-semibold tracking-wider uppercase text-sm mb-4 block">Our Story</span>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">{homeContent.storyTitle}</h2>
-              <div className="prose prose-lg text-gray-800 mb-8">
-                <div dangerouslySetInnerHTML={{ __html: homeContent.storyContent || '' }} />
-              </div>
-              <Link 
-                href="/about" 
-                className="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
+            
+            {/* Content with improved typography */}
+            <div className="space-y-6">              
+              <h2 className="text-tcs-navy-900 color-black"
+                style={{
+                  color: '#1e293b',
+                  fontSize: '1.95rem',
+                  lineHeight: '1.25rem'
+                }}
               >
-                Learn More About Us
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
+                {homeContent.storyTitle}
+              </h2>              
+              <div className="prose prose-lg prose-slate max-w-none">
+                <div 
+                  className="leading-relaxed text-lg space-y-4"
+                  style={{ 
+                    color: '#1e293b',
+                    fontSize: '1.125rem',
+                    lineHeight: '1.75rem'
+                  }}
+                  dangerouslySetInnerHTML={{ __html: homeContent.storyContent || '' }} 
+                />
+              </div>
+              
+              <div className="pt-4">
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 px-10 py-4 text-white font-bold rounded-xl bg-tcs-navy-900 hover:bg-tcs-navy-900/20 backdrop-blur-md transition-all duration-300 border-2 border-white/40 hover:border-white/60 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105"
+                  style={{
+                    backgroundColor: '#0F1F2D',
+                  }}
+                >
+                  Learn More About Us
+                </Link>
+
+                {/* <Link 
+                  href="/about" 
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-tcs-navy-900 text-white font-bold rounded-xl hover:bg-tcs-navy-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border border-tcs-navy-700"
+                >
+                  Learn More About Us
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link> */}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Recent Blog Posts Section */}
-      <section className="py-24 bg-gray-800 relative">
-        {/* Decorative top border */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400"></div>
-        <div className="container mx-auto px-4">
+      {/* Recent Blog Posts Section - Medium Dark Theme for Contrast */}
+      <section className="relative py-20 md:py-28 bg-gradient-to-br from-slate-800 via-tcs-navy-700 to-slate-900 overflow-hidden">
+        {/* Subtle pattern overlay */}
+        {/* <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(92,179,232,0.03)_25%,rgba(92,179,232,0.03)_50%,transparent_50%,transparent_75%,rgba(92,179,232,0.03)_75%,rgba(92,179,232,0.03)_100%)] bg-[length:20px_20px]" /> */}
+        
+        {/* Gradient overlay */}
+        {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-slate-900/40" /> */}
+        
+        {/* Decorative top border with glow */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-tcs-blue-400 to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-tcs-blue-500/10 to-transparent"></div>
+        
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="text-center mb-16">
-            <span className="text-yellow-400 font-semibold tracking-wider uppercase text-sm mb-4 block">Latest Updates</span>
-            <h2 className="text-4xl font-bold text-white mb-6">Recent Blog Posts</h2>
-            <div className="w-24 h-1 bg-yellow-500 mx-auto mb-6"></div>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <div className="inline-flex items-center px-4 py-2 bg-tcs-blue-900/40 border border-tcs-blue-500/30 rounded-full mb-6 backdrop-blur-sm">
+              <span className="text-tcs-blue-300 font-bold tracking-wider uppercase text-xs">Latest Updates</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight">Recent Blog Posts</h2>
+            <div className="w-20 h-1.5 bg-gradient-to-r from-tcs-blue-400 to-tcs-blue-300 rounded-full mx-auto mb-6"></div>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
               Stay updated with the latest news, tips, and insights from the construction industry
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {recentPosts.map((post) => (
-              <article key={post.id} className="bg-white rounded-xl shadow-xl overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 border border-gray-100">
-                <div className="p-6">
-                  <p className="text-yellow-600 text-sm mb-2">{post.date}</p>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">
-                    <Link href={`/blog/${post.slug}`} className="hover:text-yellow-600 transition-colors">
+              <article key={post.id} className="bg-white rounded-2xl shadow-2xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300 border border-gray-200 hover:border-tcs-blue-400 hover:shadow-tcs-blue-500/20 group">
+                <div className="p-7">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-1.5 h-1.5 rounded-full bg-tcs-blue-500"></div>
+                    <p className="text-gray-900 text-sm font-bold uppercase tracking-wide">{post.date}</p>
+                  </div>
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 leading-snug">
+                    <Link href={`/blog/${post.slug}`} className="hover:text-tcs-blue-600 transition-colors group-hover:text-tcs-blue-600">
                       {post.title}
                     </Link>
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+                  <p className="text-gray-700 mb-5 line-clamp-3 leading-relaxed text-base">{post.excerpt}</p>
                   <Link 
                     href={`/blog/${post.slug}`}
-                    className="text-yellow-600 font-medium hover:text-yellow-700 inline-flex items-center"
+                    className="text-gray-900 font-bold hover:text-tcs-blue-700 inline-flex items-center gap-2 transition-all group-hover:gap-3"
                   >
                     Read more
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
                 </div>
@@ -163,14 +251,14 @@ export default async function Home() {
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-14">
             <Link 
               href="/blog"
-              className="inline-flex items-center px-6 py-3 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-tcs-blue-600 to-tcs-blue-500 text-white font-bold rounded-xl hover:from-tcs-blue-700 hover:to-tcs-blue-600 transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-tcs-blue-500/30 transform hover:-translate-y-1 border border-tcs-blue-400/30"
             >
               View All Blog Posts
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
           </div>

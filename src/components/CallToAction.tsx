@@ -14,13 +14,13 @@ export default function CallToAction({
   buttonLink = "/contact"
 }: CallToActionProps) {
   return (
-    <section className="py-16 bg-yellow-500">
+    <section className="py-16 bg-tcs-accent">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold mb-4 text-gray-900">{title}</h2>
-        <p className="text-xl mb-8 text-gray-900">{description}</p>
+        <h2 className="text-3xl font-bold mb-4 text-tcs-navy">{title}</h2>
+        <p className="text-xl mb-8 text-tcs-navy">{description}</p>
         <Link 
           href={buttonLink}
-          className="inline-block bg-gray-900 text-white font-bold py-3 px-8 rounded-md hover:bg-gray-800 transition-colors"
+          className="inline-flex items-center px-8 py-3 bg-tcs-navy text-white font-bold rounded-md hover:bg-tcs-navy-800 transition-colors shadow-lg"
         >
           {buttonText}
         </Link>
