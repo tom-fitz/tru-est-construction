@@ -1,24 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function Navigation() {
-  const [_, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => {
+    // Exact match for home page
+    if (path === '/') {
+      return pathname === '/';
+    }
+    // For other routes, check if pathname starts with the path
+    return pathname === path || pathname.startsWith(path + '/');
+  };
 
   const navLinks = [
     { href: '/', label: 'Home' },

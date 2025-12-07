@@ -183,16 +183,6 @@ export default async function Home() {
                 >
                   Learn More About Us
                 </Link>
-
-                {/* <Link 
-                  href="/about" 
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-tcs-navy-900 text-white font-bold rounded-xl hover:bg-tcs-navy-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 border border-tcs-navy-700"
-                >
-                  Learn More About Us
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link> */}
               </div>
             </div>
           </div>
