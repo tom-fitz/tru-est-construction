@@ -1,4 +1,4 @@
-import { getPageContent, getFeaturedServices } from '@/lib/db-storage';
+import { getPageContent, getAllServices } from '@/lib/db-storage';
 import PageHeader from '@/components/PageHeader';
 import CallToAction from '@/components/CallToAction';
 
@@ -9,14 +9,28 @@ export const revalidate = 0;
 
 export default async function ServicesPage() {
   const page = await getPageContent('services');
-  const servicesContent = page?.content || '<p>We offer comprehensive construction services including residential and commercial projects. Our team of experienced professionals is dedicated to delivering high-quality results that exceed your expectations.</p><p>From initial planning to final completion, we handle every aspect of your construction project with precision and care. Our commitment to quality craftsmanship and attention to detail ensures that your vision becomes reality.</p>';
-  const featuredServices = await getFeaturedServices();
+  const allServices = await getAllServices();
+  
+  // Parse page content as JSON
+  let pageTitle = 'Our Services';
+  let pageSubtitle = 'Comprehensive construction solutions for your every need';
+  let servicesContent = '<p>We offer comprehensive construction services including residential and commercial projects. Our team of experienced professionals is dedicated to delivering high-quality results that exceed your expectations.</p><p>From initial planning to final completion, we handle every aspect of your construction project with precision and care. Our commitment to quality craftsmanship and attention to detail ensures that your vision becomes reality.</p>';
+  
+  try {
+    const parsed = JSON.parse(page?.content || '{}');
+    pageTitle = parsed.pageTitle || pageTitle;
+    pageSubtitle = parsed.pageSubtitle || pageSubtitle;
+    servicesContent = parsed.content || servicesContent;
+  } catch {
+    // Fallback to old format
+    servicesContent = page?.content || servicesContent;
+  }
 
   return (
     <div className="flex flex-col">
       <PageHeader 
-        title="Our Services" 
-        description="Comprehensive construction solutions for your every need"
+        title={pageTitle} 
+        description={pageSubtitle}
       />
 
       {/* Main Content */}
@@ -38,7 +52,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* Featured Services */}
-      {featuredServices.length > 0 && (
+      {allServices.length > 0 && (
         <section className="py-16 bg-gray-100 dark:bg-tcs-navy">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
@@ -46,7 +60,7 @@ export default async function ServicesPage() {
               <div className="w-24 h-1 bg-tcs-blue mx-auto mb-6"></div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredServices.slice(0, 3).map((service) => (
+              {allServices.map((service) => (
                 <div 
                   key={service.id}
                   className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl"

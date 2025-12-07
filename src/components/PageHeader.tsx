@@ -49,7 +49,7 @@ export default function PageHeader({
         />
 
       {/* TCS Logo - Left-aligned and Semi-transparent */}
-      <div className="absolute inset-0 flex items-end justify-start pl-8 md:pl-16 pb-8 opacity-45">
+      <div className="absolute inset-0 flex items-end justify-start pl-8 md:pl-16 pb-8 opacity-65">
         <Image
           src="/tcs_logo_transparent_buffer.png"
           alt="TCS Logo"

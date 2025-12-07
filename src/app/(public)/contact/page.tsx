@@ -9,13 +9,27 @@ export const revalidate = 0;
 export default async function Contact() {
   // Get the contact page content from the database
   const page = await getPageContent('contact');
-  const contactContent = page?.content || '';
+  
+  // Parse page content as JSON
+  let pageTitle = 'Contact Us';
+  let pageSubtitle = 'Have a question or want to discuss a project? Get in touch with our team.';
+  let contactContent = '';
+  
+  try {
+    const parsed = JSON.parse(page?.content || '{}');
+    pageTitle = parsed.pageTitle || pageTitle;
+    pageSubtitle = parsed.pageSubtitle || pageSubtitle;
+    contactContent = parsed.content || '';
+  } catch {
+    // Fallback to old format
+    contactContent = page?.content || '';
+  }
   
   return (
     <div className="flex flex-col">
       <PageHeader 
-        title="Contact Us" 
-        description="Have a question or want to discuss a project? Get in touch with our team."
+        title={pageTitle} 
+        description={pageSubtitle}
       />
 
       {/* Contact Information and Form */}

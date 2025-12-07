@@ -20,7 +20,8 @@ export default function ServicesManagement() {
   const [isSaving, setIsSaving] = useState(false);
   
   const [pageFormData, setPageFormData] = useState({
-    title: '',
+    pageTitle: '',
+    pageSubtitle: '',
     content: '',
   });
 
@@ -63,20 +64,30 @@ export default function ServicesManagement() {
       if (pageRes.ok) {
         const pageData = await pageRes.json();
         console.log('Loaded page content:', pageData);
-        setPageFormData({
-          title: pageData.title,
-          content: pageData.content,
-        });
+        
+        // Parse JSON content
+        try {
+          const parsed = JSON.parse(pageData.content || '{}');
+          setPageFormData({
+            pageTitle: parsed.pageTitle || pageData.title || 'Our Services',
+            pageSubtitle: parsed.pageSubtitle || 'Comprehensive construction solutions for your every need',
+            content: parsed.content || pageData.content || '',
+          });
+        } catch {
+          // Old format - plain HTML content
+          setPageFormData({
+            pageTitle: pageData.title || 'Our Services',
+            pageSubtitle: 'Comprehensive construction solutions for your every need',
+            content: pageData.content || '',
+          });
+        }
       } else if (pageRes.status === 404) {
         // Page doesn't exist yet - use defaults
         console.log('Services page not found, using defaults');
-        const defaultPage = {
-          title: 'Our Services',
-          content: '<p>We offer comprehensive construction services including residential and commercial projects. Our team of experienced professionals is dedicated to delivering high-quality results that exceed your expectations.</p><p>From initial planning to final completion, we handle every aspect of your construction project with precision and care. Our commitment to quality craftsmanship and attention to detail ensures that your vision becomes reality.</p>',
-        };
         setPageFormData({
-          title: defaultPage.title,
-          content: defaultPage.content,
+          pageTitle: 'Our Services',
+          pageSubtitle: 'Comprehensive construction solutions for your every need',
+          content: '<p>We offer comprehensive construction services including residential and commercial projects. Our team of experienced professionals is dedicated to delivering high-quality results that exceed your expectations.</p><p>From initial planning to final completion, we handle every aspect of your construction project with precision and care. Our commitment to quality craftsmanship and attention to detail ensures that your vision becomes reality.</p>',
         });
       } else {
         const errorText = await pageRes.text();
@@ -101,12 +112,18 @@ export default function ServicesManagement() {
     setError(null);
 
     try {
+      // Save as JSON structure
+      const contentToSave = JSON.stringify(pageFormData);
+      
       const response = await fetch('/api/admin/pages?id=services', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(pageFormData),
+        body: JSON.stringify({
+          title: 'Services', // Keep a simple title for the database
+          content: contentToSave,
+        }),
       });
 
       if (!response.ok) {
@@ -370,16 +387,30 @@ export default function ServicesManagement() {
 
           <form onSubmit={handleSavePageContent} className="space-y-4">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="pageTitle" className="block text-sm font-medium text-gray-700 mb-1">
                 Page Title
               </label>
               <input
                 type="text"
-                id="title"
-                value={pageFormData.title}
-                onChange={(e) => setPageFormData(prev => ({ ...prev, title: e.target.value }))}
+                id="pageTitle"
+                value={pageFormData.pageTitle}
+                onChange={(e) => setPageFormData(prev => ({ ...prev, pageTitle: e.target.value }))}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="pageSubtitle" className="block text-sm font-medium text-gray-700 mb-1">
+                Page Subtitle <span className="text-gray-500 font-normal">(optional)</span>
+              </label>
+              <input
+                type="text"
+                id="pageSubtitle"
+                value={pageFormData.pageSubtitle}
+                onChange={(e) => setPageFormData(prev => ({ ...prev, pageSubtitle: e.target.value }))}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                placeholder="Appears under the page title"
               />
             </div>
 

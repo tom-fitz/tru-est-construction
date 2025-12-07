@@ -200,6 +200,24 @@ export async function getServices(): Promise<Service[]> {
   return result as Service[];
 }
 
+export async function getAllServices(): Promise<Service[]> {
+  const result = await sql`
+    SELECT 
+      id, 
+      title, 
+      description, 
+      icon, 
+      features, 
+      order_index as "orderIndex",
+      is_featured as "isFeatured",
+      created_at as "createdAt",
+      updated_at as "updatedAt"
+    FROM services 
+    ORDER BY order_index ASC
+  `;
+  return result as Service[];
+}
+
 export async function getFeaturedServices(): Promise<Service[]> {
   const result = await sql`
     SELECT 

@@ -1,4 +1,4 @@
-import { getBlogPosts } from '@/lib/db-storage';
+import { getBlogPosts, getPageContent } from '@/lib/db-storage';
 import Link from "next/link";
 import PageHeader from '@/components/PageHeader';
 import CallToAction from '@/components/CallToAction';
@@ -11,12 +11,25 @@ export const revalidate = 0;
 export default async function Blog() {
   // Get all blog posts from the database
   const posts = await getBlogPosts();
+  const page = await getPageContent('blog');
+  
+  // Parse page content as JSON
+  let pageTitle = 'Our Blog';
+  let pageSubtitle = 'Stay updated with the latest news, tips, and insights from the construction industry';
+  
+  try {
+    const parsed = JSON.parse(page?.content || '{}');
+    pageTitle = parsed.pageTitle || pageTitle;
+    pageSubtitle = parsed.pageSubtitle || pageSubtitle;
+  } catch {
+    // Use defaults if parsing fails
+  }
   
   return (
     <div className="flex flex-col">
       <PageHeader 
-        title="Our Blog" 
-        description="Stay updated with the latest news, tips, and insights from the construction industry"
+        title={pageTitle} 
+        description={pageSubtitle}
       />
 
       {/* Blog Posts */}

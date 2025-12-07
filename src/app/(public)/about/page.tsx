@@ -24,13 +24,27 @@ const values = [
 
 export default async function About() {
   const page = await getPageContent('about');
-  const aboutContent = page?.content || '';
+  
+  // Parse page content as JSON
+  let pageTitle = 'About Us';
+  let pageSubtitle = 'Building excellence since 1978';
+  let aboutContent = '';
+  
+  try {
+    const parsed = JSON.parse(page?.content || '{}');
+    pageTitle = parsed.pageTitle || pageTitle;
+    pageSubtitle = parsed.pageSubtitle || pageSubtitle;
+    aboutContent = parsed.content || '';
+  } catch {
+    // Fallback to old format
+    aboutContent = page?.content || '';
+  }
   
   return (
     <div className="flex flex-col">
       <PageHeader 
-        title="About Us" 
-        description="Building excellence since 1978"
+        title={pageTitle} 
+        description={pageSubtitle}
       />
 
       {/* Main Content */}

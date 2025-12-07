@@ -6,6 +6,12 @@ import { PageContent } from '@/lib/db-storage';
 import Link from 'next/link';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 
+interface PageData {
+  pageTitle: string;
+  pageSubtitle: string;
+  content: string;
+}
+
 interface HomePageContent {
   heroTitle: string;
   heroDescription: string;
@@ -20,6 +26,11 @@ export default function ContentEditor({ params }: { params: any }) {
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
+    content: '',
+  });
+  const [pageData, setPageData] = useState<PageData>({
+    pageTitle: '',
+    pageSubtitle: '',
     content: '',
   });
   const [homePageData, setHomePageData] = useState<HomePageContent>({
@@ -52,6 +63,35 @@ export default function ContentEditor({ params }: { params: any }) {
           title: pageContent.title,
           content: pageContent.content,
         });
+
+        // Parse content as JSON for structured pages (non-home)
+        if (params.id !== 'home') {
+          try {
+            const parsedContent = JSON.parse(pageContent.content);
+            if (parsedContent.pageTitle) {
+              // It's a structured page
+              setPageData({
+                pageTitle: parsedContent.pageTitle || '',
+                pageSubtitle: parsedContent.pageSubtitle || '',
+                content: parsedContent.content || '',
+              });
+            } else {
+              // Old format - just plain content
+              setPageData({
+                pageTitle: pageContent.title,
+                pageSubtitle: '',
+                content: pageContent.content,
+              });
+            }
+          } catch {
+            // Not JSON - old format with plain HTML
+            setPageData({
+              pageTitle: pageContent.title,
+              pageSubtitle: '',
+              content: pageContent.content,
+            });
+          }
+        }
 
         // If this is the homepage, parse the content into sections
         if (params.id === 'home') {
@@ -90,7 +130,7 @@ export default function ContentEditor({ params }: { params: any }) {
         [name]: value,
       }));
     } else {
-      setFormData(prev => ({
+      setPageData(prev => ({
         ...prev,
         [name]: value,
       }));
@@ -106,7 +146,7 @@ export default function ContentEditor({ params }: { params: any }) {
     try {
       const contentToSave = params.id === 'home' 
         ? JSON.stringify(homePageData)
-        : formData.content;
+        : JSON.stringify(pageData);
 
       const response = await fetch(`/api/admin/pages?id=${params.id}`, {
         method: 'PUT',
@@ -181,7 +221,7 @@ export default function ContentEditor({ params }: { params: any }) {
       {/* Tab Navigation */}
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
-          <button
+          {/* <button
             onClick={() => setActiveTab('hero')}
             className={`${
               activeTab === 'hero'
@@ -190,7 +230,7 @@ export default function ContentEditor({ params }: { params: any }) {
             } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
           >
             Hero Section
-          </button>
+          </button> */}
           <button
             onClick={() => setActiveTab('story')}
             className={`${
@@ -287,17 +327,32 @@ export default function ContentEditor({ params }: { params: any }) {
   const renderStandardEditor = () => (
     <>
       <div className="mb-4">
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="pageTitle" className="block text-sm font-medium text-gray-700 mb-1">
           Page Title
         </label>
         <input
           type="text"
-          id="title"
-          name="title"
-          value={formData.title}
+          id="pageTitle"
+          name="pageTitle"
+          value={pageData.pageTitle}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
           required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="pageSubtitle" className="block text-sm font-medium text-gray-700 mb-1">
+          Page Subtitle <span className="text-gray-500 font-normal">(optional)</span>
+        </label>
+        <input
+          type="text"
+          id="pageSubtitle"
+          name="pageSubtitle"
+          value={pageData.pageSubtitle}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          placeholder="Appears under the page title"
         />
       </div>
 
@@ -306,9 +361,9 @@ export default function ContentEditor({ params }: { params: any }) {
           Content
         </label>
         <RichTextEditor
-          value={formData.content}
+          value={pageData.content}
           onChange={(value) => {
-            setFormData(prev => ({
+            setPageData(prev => ({
               ...prev,
               content: value,
             }));

@@ -67,13 +67,27 @@ const testimonials = [
 
 export default async function TestimonialsPage() {
   const page = await getPageContent('testimonials');
-  const testimonialsContent = page?.content || '';
+  
+  // Parse page content as JSON
+  let pageTitle = 'Client Testimonials';
+  let pageSubtitle = 'See what our clients say about their experience with Tru-Est Construction';
+  let testimonialsContent = '';
+  
+  try {
+    const parsed = JSON.parse(page?.content || '{}');
+    pageTitle = parsed.pageTitle || pageTitle;
+    pageSubtitle = parsed.pageSubtitle || pageSubtitle;
+    testimonialsContent = parsed.content || '';
+  } catch {
+    // Fallback to old format
+    testimonialsContent = page?.content || '';
+  }
 
   return (
     <div className="flex flex-col">
       <PageHeader 
-        title="Client Testimonials" 
-        description="See what our clients say about their experience with Tru-Est Construction"
+        title={pageTitle} 
+        description={pageSubtitle}
       />
 
       {/* Testimonials Grid */}
