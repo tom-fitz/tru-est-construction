@@ -1,5 +1,6 @@
 import { getPageContent } from '@/lib/db-storage';
 import PageHeader from '@/components/PageHeader';
+import ContactForm from '@/components/ContactForm';
 
 // Always fetch fresh data from database (no caching)
 // Perfect for content editing - see changes immediately
@@ -21,7 +22,7 @@ export default async function Contact() {
     pageSubtitle = parsed.pageSubtitle || pageSubtitle;
     contactContent = parsed.content || '';
   } catch {
-    // Fallback to old format
+    // Fallback to old format - plain HTML content
     contactContent = page?.content || '';
   }
   
@@ -42,69 +43,7 @@ export default async function Contact() {
             </div>
 
             {/* Contact Form */}
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl">
-              <div className="p-6">
-                <form className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-black dark:text-gray-300 mb-1">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-tcs-blue focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-black dark:text-gray-300 mb-1">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-tcs-blue focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-black dark:text-gray-300 mb-1">
-                      Phone
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-tcs-blue focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-black dark:text-gray-300 mb-1">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-tcs-blue focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                      required
-                    ></textarea>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-tcs-blue text-white font-bold py-3 px-6 rounded-md hover:bg-tcs-blue-600 transition-colors"
-                  >
-                    Send Message
-                  </button>
-                </form>
-              </div>
-            </div>
+            <ContactForm />
           </div>
         </div>
       </section>

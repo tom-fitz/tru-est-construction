@@ -42,6 +42,17 @@ export interface Testimonial {
   updatedAt: Date;
 }
 
+export interface ContactSubmission {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+  status: 'new' | 'read' | 'replied' | 'archived';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface CalloutItem {
   title: string;
   description: string;
@@ -565,4 +576,88 @@ export async function updateCallout(
       updated_at as "updatedAt"
   `;
   return (result[0] as Callout) || null;
+}
+
+// ============================================
+// Contact Submissions
+// ============================================
+
+export async function createContactSubmission(
+  data: Pick<ContactSubmission, 'name' | 'email' | 'phone' | 'message'>
+): Promise<ContactSubmission> {
+  const result = await sql`
+    INSERT INTO contact_submissions (name, email, phone, message, status)
+    VALUES (${data.name}, ${data.email}, ${data.phone || null}, ${data.message}, 'new')
+    RETURNING 
+      id,
+      name,
+      email,
+      phone,
+      message,
+      status,
+      created_at as "createdAt",
+      updated_at as "updatedAt"
+  `;
+  return result[0] as ContactSubmission;
+}
+
+export async function getAllContactSubmissions(): Promise<ContactSubmission[]> {
+  const result = await sql`
+    SELECT 
+      id,
+      name,
+      email,
+      phone,
+      message,
+      status,
+      created_at as "createdAt",
+      updated_at as "updatedAt"
+    FROM contact_submissions
+    ORDER BY created_at DESC
+  `;
+  return result as ContactSubmission[];
+}
+
+export async function getContactSubmission(id: number): Promise<ContactSubmission | null> {
+  const result = await sql`
+    SELECT 
+      id,
+      name,
+      email,
+      phone,
+      message,
+      status,
+      created_at as "createdAt",
+      updated_at as "updatedAt"
+    FROM contact_submissions
+    WHERE id = ${id}
+  `;
+  return (result[0] as ContactSubmission) || null;
+}
+
+export async function updateContactSubmissionStatus(
+  id: number,
+  status: ContactSubmission['status']
+): Promise<ContactSubmission | null> {
+  const result = await sql`
+    UPDATE contact_submissions
+    SET 
+      status = ${status},
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = ${id}
+    RETURNING 
+      id,
+      name,
+      email,
+      phone,
+      message,
+      status,
+      created_at as "createdAt",
+      updated_at as "updatedAt"
+  `;
+  return (result[0] as ContactSubmission) || null;
+}
+
+export async function deleteContactSubmission(id: number): Promise<void> {
+  await sql`DELETE FROM contact_submissions WHERE id = ${id}`;
 } 

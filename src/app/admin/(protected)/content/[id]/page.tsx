@@ -324,59 +324,67 @@ export default function ContentEditor({ params }: { params: any }) {
     </div>
   );
 
-  const renderStandardEditor = () => (
-    <>
-      <div className="mb-4">
-        <label htmlFor="pageTitle" className="block text-sm font-medium text-gray-700 mb-1">
-          Page Title
-        </label>
-        <input
-          type="text"
-          id="pageTitle"
-          name="pageTitle"
-          value={pageData.pageTitle}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-          required
-        />
-      </div>
+  const renderStandardEditor = () => {
+    // Pages that have content sections (not just title/subtitle)
+    const pagesWithContent = ['about', 'services'];
+    const hasContent = pagesWithContent.includes(params.id);
 
-      <div className="mb-4">
-        <label htmlFor="pageSubtitle" className="block text-sm font-medium text-gray-700 mb-1">
-          Page Subtitle <span className="text-gray-500 font-normal">(optional)</span>
-        </label>
-        <input
-          type="text"
-          id="pageSubtitle"
-          name="pageSubtitle"
-          value={pageData.pageSubtitle}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-          placeholder="Appears under the page title"
-        />
-      </div>
+    return (
+      <>
+        <div className="mb-4">
+          <label htmlFor="pageTitle" className="block text-sm font-medium text-gray-700 mb-1">
+            Page Title
+          </label>
+          <input
+            type="text"
+            id="pageTitle"
+            name="pageTitle"
+            value={pageData.pageTitle}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            required
+          />
+        </div>
 
-      <div className="mb-4">
-        <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-          Content
-        </label>
-        <RichTextEditor
-          value={pageData.content}
-          onChange={(value) => {
-            setPageData(prev => ({
-              ...prev,
-              content: value,
-            }));
-          }}
-          placeholder="Enter your content here..."
-          id="content"
-        />
-        <p className="mt-1 text-sm text-gray-500">
-          Use the toolbar to format your text with bold, italic, and underline.
-        </p>
-      </div>
-    </>
-  );
+        <div className="mb-4">
+          <label htmlFor="pageSubtitle" className="block text-sm font-medium text-gray-700 mb-1">
+            Page Subtitle <span className="text-gray-500 font-normal">(optional)</span>
+          </label>
+          <input
+            type="text"
+            id="pageSubtitle"
+            name="pageSubtitle"
+            value={pageData.pageSubtitle}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            placeholder="Appears under the page title"
+          />
+        </div>
+
+        {hasContent && (
+          <div className="mb-4">
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+              Content
+            </label>
+            <RichTextEditor
+              value={pageData.content}
+              onChange={(value) => {
+                setPageData(prev => ({
+                  ...prev,
+                  content: value,
+                }));
+              }}
+              placeholder="Enter your content here..."
+              id="content"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Use the toolbar to format your text with bold, italic, and underline.
+            </p>
+          </div>
+        )}
+      </>
+    );
+  };
 
   return (
     <div>
@@ -430,26 +438,28 @@ export default function ContentEditor({ params }: { params: any }) {
         </div>
       </form>
       
-      <div className="mt-6 p-6 bg-white rounded-lg shadow-md overflow-hidden">
-        <h2 className="text-lg font-semibold mb-3 text-gray-700">Content Preview</h2>
-        <div className="border p-4 rounded-md prose max-w-none text-gray-700">
-          {params.id === 'home' ? (
-            activeTab === 'hero' ? (
-              <div className="space-y-4">
-                <h1 className="text-4xl font-bold">{homePageData.heroTitle}</h1>
-                <div className="text-xl" dangerouslySetInnerHTML={{ __html: homePageData.heroDescription || '' }} />
-              </div>
+      {['about', 'services'].includes(params.id) && (
+        <div className="mt-6 p-6 bg-white rounded-lg shadow-md overflow-hidden">
+          <h2 className="text-lg font-semibold mb-3 text-gray-700">Content Preview</h2>
+          <div className="border p-4 rounded-md prose max-w-none text-gray-700">
+            {params.id === 'home' ? (
+              activeTab === 'hero' ? (
+                <div className="space-y-4">
+                  <h1 className="text-4xl font-bold">{homePageData.heroTitle}</h1>
+                  <div className="text-xl" dangerouslySetInnerHTML={{ __html: homePageData.heroDescription || '' }} />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-bold">{homePageData.storyTitle}</h2>
+                  <div dangerouslySetInnerHTML={{ __html: homePageData.storyContent || '' }} />
+                </div>
+              )
             ) : (
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold">{homePageData.storyTitle}</h2>
-                <div dangerouslySetInnerHTML={{ __html: homePageData.storyContent || '' }} />
-              </div>
-            )
-          ) : (
-            <div dangerouslySetInnerHTML={{ __html: formData.content || '' }} />
-          )}
+              <div dangerouslySetInnerHTML={{ __html: formData.content || '' }} />
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 } 

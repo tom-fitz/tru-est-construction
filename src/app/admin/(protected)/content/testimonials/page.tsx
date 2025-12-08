@@ -13,6 +13,14 @@ export default function TestimonialsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  
+  const [pageFormData, setPageFormData] = useState({
+    pageTitle: '',
+    pageSubtitle: '',
+  });
+
   const [formData, setFormData] = useState({
     name: '',
     role: '',
@@ -24,23 +32,94 @@ export default function TestimonialsPage() {
   });
 
   useEffect(() => {
-    loadTestimonials();
+    loadData();
   }, []);
 
-  const loadTestimonials = async () => {
+  const loadData = async () => {
     try {
-      const response = await fetch('/api/admin/testimonials');
-      if (!response.ok) {
+      const [testimonialsRes, pageRes] = await Promise.all([
+        fetch('/api/admin/testimonials'),
+        fetch('/api/admin/pages?id=testimonials')
+      ]);
+
+      if (!testimonialsRes.ok) {
         throw new Error('Failed to fetch testimonials');
       }
-      const data = await response.json();
-      setTestimonials(data);
+
+      const testimonialsData = await testimonialsRes.json();
+      setTestimonials(testimonialsData);
+
+      // Handle page content - might not exist yet
+      if (pageRes.ok) {
+        const pageData = await pageRes.json();
+        
+        // Parse JSON content
+        try {
+          const parsed = JSON.parse(pageData.content || '{}');
+          setPageFormData({
+            pageTitle: parsed.pageTitle || pageData.title || 'Client Testimonials',
+            pageSubtitle: parsed.pageSubtitle || 'See what our clients say about their experience with Tru-Est Construction',
+          });
+        } catch {
+          // Old format or no content
+          setPageFormData({
+            pageTitle: pageData.title || 'Client Testimonials',
+            pageSubtitle: 'See what our clients say about their experience with Tru-Est Construction',
+          });
+        }
+      } else if (pageRes.status === 404) {
+        // Page doesn't exist yet - use defaults
+        setPageFormData({
+          pageTitle: 'Client Testimonials',
+          pageSubtitle: 'See what our clients say about their experience with Tru-Est Construction',
+        });
+      }
+
       setError(null);
     } catch (error) {
-      console.error('Error loading testimonials:', error);
-      setError('Failed to load testimonials. Please try again.');
+      console.error('Error loading data:', error);
+      setError('Failed to load data. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSavePageContent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setSaveMessage('');
+    setError(null);
+
+    try {
+      // Save as JSON structure
+      const contentToSave = JSON.stringify(pageFormData);
+      
+      const response = await fetch('/api/admin/pages?id=testimonials', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: 'Testimonials',
+          content: contentToSave,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save page content');
+      }
+
+      setSaveMessage('Page content saved successfully!');
+      
+      setTimeout(() => {
+        setSaveMessage('');
+      }, 3000);
+    } catch (error) {
+      console.error('Error saving page content:', error);
+      setError(error instanceof Error ? error.message : 'Failed to save page content. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -63,10 +142,12 @@ export default function TestimonialsPage() {
         throw new Error('Failed to save testimonial');
       }
 
-      await loadTestimonials();
+      await loadData();
       setIsModalOpen(false);
       resetForm();
       setError(null);
+      setSaveMessage(editingTestimonial ? 'Testimonial updated successfully!' : 'Testimonial created successfully!');
+      setTimeout(() => setSaveMessage(''), 3000);
     } catch (error) {
       console.error('Error saving testimonial:', error);
       setError('Failed to save testimonial. Please try again.');
@@ -98,8 +179,10 @@ export default function TestimonialsPage() {
           throw new Error('Failed to delete testimonial');
         }
 
-        await loadTestimonials();
+        await loadData();
         setError(null);
+        setSaveMessage('Testimonial deleted successfully!');
+        setTimeout(() => setSaveMessage(''), 3000);
       } catch (error) {
         console.error('Error deleting testimonial:', error);
         setError('Failed to delete testimonial. Please try again.');
@@ -121,7 +204,7 @@ export default function TestimonialsPage() {
         throw new Error('Failed to update featured status');
       }
 
-      await loadTestimonials();
+      await loadData();
       setError(null);
     } catch (error) {
       console.error('Error toggling featured status:', error);
@@ -154,6 +237,75 @@ export default function TestimonialsPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Testimonials Management</h1>
+      </div>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
+
+      {saveMessage && (
+        <div className="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+          {saveMessage}
+        </div>
+      )}
+
+      {/* Page Content Section */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Page Title & Subtitle
+        </h2>
+        <p className="text-gray-600 mb-6">
+          These appear in the page header above the testimonials.
+        </p>
+
+        <form onSubmit={handleSavePageContent} className="space-y-4">
+          <div>
+            <label htmlFor="pageTitle" className="block text-sm font-medium text-gray-700 mb-1">
+              Page Title
+            </label>
+            <input
+              type="text"
+              id="pageTitle"
+              value={pageFormData.pageTitle}
+              onChange={(e) => setPageFormData(prev => ({ ...prev, pageTitle: e.target.value }))}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="pageSubtitle" className="block text-sm font-medium text-gray-700 mb-1">
+              Page Subtitle <span className="text-gray-500 font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              id="pageSubtitle"
+              value={pageFormData.pageSubtitle}
+              onChange={(e) => setPageFormData(prev => ({ ...prev, pageSubtitle: e.target.value }))}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              placeholder="Appears under the page title"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isSaving}
+              className={`px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-medium ${
+                isSaving ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {isSaving ? 'Saving...' : 'Save Page Content'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Testimonials Section */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Testimonials</h2>
         <button
           onClick={() => {
             resetForm();
@@ -165,12 +317,6 @@ export default function TestimonialsPage() {
           Add Testimonial
         </button>
       </div>
-
-      {error && (
-        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
-          {error}
-        </div>
-      )}
 
       <div className="grid gap-6">
         {testimonials.map((testimonial) => (

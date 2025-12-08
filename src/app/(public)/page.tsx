@@ -107,19 +107,19 @@ export default async function Home() {
                 <div className="flex flex-wrap justify-center gap-6">
                   <Link 
                     href="/contact" 
-                    className="inline-flex items-center gap-2 px-10 py-4 bg-gradient-to-r from-tcs-blue-600 to-tcs-blue-500 text-white font-bold rounded-xl hover:from-tcs-blue-700 hover:to-tcs-blue-600 transition-all duration-300 shadow-2xl hover:shadow-tcs-blue-500/50 transform hover:-translate-y-1 hover:scale-105 border border-tcs-blue-400/30"
+                    className="inline-flex items-center gap-2 px-10 py-4 bg-tcs-accent text-white font-bold rounded-xl hover:from-tcs-blue-700 hover:to-tcs-blue-600 transition-all duration-300 shadow-2xl hover:shadow-tcs-accent/50 transform hover:-translate-y-1 hover:scale-105"
                   >
                     Start Your Project
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </Link>
-                  <Link 
+                  {/* <Link 
                     href="/about" 
                     className="inline-flex items-center gap-2 px-10 py-4 text-white font-bold rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all duration-300 border-2 border-white/40 hover:border-white/60 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105"
                   >
                     Learn More About Us
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
