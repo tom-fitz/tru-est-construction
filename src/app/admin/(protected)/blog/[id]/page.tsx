@@ -126,9 +126,9 @@ export default function BlogEditor({ params }: { params: any }) {
         setPost(newPost);
         setSaveMessage('Blog post created successfully!');
         
-        // Redirect to edit page for the new post
+        // Redirect to blog list page
         setTimeout(() => {
-          router.push(`/admin/blog/${newPost.id}`);
+          router.push('/admin/blog');
         }, 1500);
       } else {
         // Update existing post
@@ -194,7 +194,7 @@ export default function BlogEditor({ params }: { params: any }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold text-tcs-navy-900">
           {isNewPost ? 'Create New Blog Post' : `Edit: ${post?.title}`}
         </h1>
         <div className="space-x-2">

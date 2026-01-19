@@ -55,7 +55,10 @@ export default async function Blog() {
                         {post.title}
                       </Link>
                     </h2>
-                    <p className="text-black dark:text-gray-300 mb-4">{post.excerpt}</p>
+                    <div 
+                      className="text-black dark:text-gray-300 mb-4 prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                    />
                     <Link 
                       href={`/blog/${post.slug}`}
                       className="text-tcs-blue font-medium hover:text-tcs-blue-600 inline-flex items-center"

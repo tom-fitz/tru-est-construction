@@ -127,7 +127,10 @@ export default function BlogManagement() {
                   <tr key={post.id}>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{post.title}</div>
-                      <div className="text-sm text-gray-500 truncate max-w-xs">{post.excerpt}</div>
+                      <div 
+                        className="text-sm text-gray-500 truncate max-w-xs prose prose-sm"
+                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                      />
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">{post.date}</td>
                     <td className="px-6 py-4">

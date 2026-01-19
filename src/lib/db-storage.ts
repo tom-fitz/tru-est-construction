@@ -105,12 +105,23 @@ export async function updatePageContent(
   return (result[0] as PageContent) || null;
 }
 
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const result = await sql`
+    SELECT 
+      id, title, slug, excerpt, content, date, published
+    FROM blog_posts
+    ORDER BY date DESC
+  `;
+  return result as BlogPost[];
+}
+
 // Blog Post Operations
 export async function getBlogPosts(): Promise<BlogPost[]> {
   const result = await sql`
     SELECT 
       id, title, slug, excerpt, content, date, published
     FROM blog_posts 
+    WHERE published = true
     ORDER BY date DESC
   `;
   return result as BlogPost[];

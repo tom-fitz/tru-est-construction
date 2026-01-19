@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { auth } from '../../../../../auth';
-import { 
-  getBlogPosts, 
+import {
   getBlogPostById, 
   createBlogPost, 
   updateBlogPost, 
   deleteBlogPost, 
-  toggleBlogPostPublish 
+  toggleBlogPostPublish,
+  getAllBlogPosts
 } from '@/lib/db-storage';
 
 export async function GET(request: Request) {
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       }
       return NextResponse.json(post);
     } else {
-      const posts = await getBlogPosts();
+      const posts = await getAllBlogPosts();
       return NextResponse.json(posts);
     }
   } catch (error) {
